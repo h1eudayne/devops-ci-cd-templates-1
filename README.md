@@ -62,6 +62,20 @@ Repository nay dung de luu va tai su dung cac file CI/CD da duoc chuan hoa cho n
 |   |   |   `-- vuejs/
 |   |   |       |-- README.md
 |   |   |       `-- npm-dist-nginx-alpine.Dockerfile.example
+|   |   |-- mysql/
+|   |   |   `-- install/
+|   |   |       `-- ubuntu/
+|   |   |           `-- README.md
+|   |   |-- kubernetes/
+|   |   |   `-- install/
+|   |   |       `-- ubuntu/
+|   |   |           |-- README.md
+|   |   |           |-- 01-prepare-all-nodes.sh.example
+|   |   |           |-- 02-init-single-master.sh.example
+|   |   |           |-- 03-init-ha-master.sh.example
+|   |   |           |-- 04-join-worker.sh.example
+|   |   |           |-- 05-join-control-plane.sh.example
+|   |   |           `-- 06-reset-cluster.sh.example
 |   |   `-- nginx/
 |   |       `-- react-spa-port-3000.conf.example
 |   `-- jenkins/
@@ -139,7 +153,14 @@ Tai nguyen dung chung nhu config Nginx, Dockerfile mau, shell snippet, hoac file
 | Docker | Registry | Script mau cai Harbor offline, xin TLS bang Certbot va chay prepare/install sau khi review harbor.yml | `templates/shared/docker/registry/harbor/install-harbor.sh.example` |
 | Docker | Registry | Huong dan tao private registry voi TLS self-signed certificate va Docker Compose | `templates/shared/docker/registry/private-registry-tls/docker-compose.yml.example` |
 | Docker | VueJS | Multi-stage npm build, copy `dist` sang Nginx runtime va phuc vu static file | `templates/shared/docker/vuejs/npm-dist-nginx-alpine.Dockerfile.example` |
+| MySQL | Ubuntu | Huong dan cai `mysql-server`, chay `mysql_secure_installation`, tao database va user ung dung | `templates/shared/mysql/install/ubuntu/README.md` |
 | Nginx | React SPA | Nginx config mau cho React SPA chay tren port 3000 | `templates/shared/nginx/react-spa-port-3000.conf.example` |
+| Kubernetes | Ubuntu | Bash script chuan bi tat ca node K8s: hosts, swap, kernel module, containerd, kubeadm v1.30 | `templates/shared/kubernetes/install/ubuntu/01-prepare-all-nodes.sh.example` |
+| Kubernetes | Ubuntu | Khoi tao cum K8s mo hinh 1 master + 2 worker voi Calico CNI | `templates/shared/kubernetes/install/ubuntu/02-init-single-master.sh.example` |
+| Kubernetes | Ubuntu | Khoi tao cum K8s mo hinh 3 master HA voi control-plane-endpoint | `templates/shared/kubernetes/install/ubuntu/03-init-ha-master.sh.example` |
+| Kubernetes | Ubuntu | Join worker node vao cum K8s (mo hinh 1 master + 2 worker) | `templates/shared/kubernetes/install/ubuntu/04-join-worker.sh.example` |
+| Kubernetes | Ubuntu | Join control-plane node bo sung vao cum K8s HA (mo hinh 3 master) | `templates/shared/kubernetes/install/ubuntu/05-join-control-plane.sh.example` |
+| Kubernetes | Ubuntu | Reset cum K8s de cai lai tu dau | `templates/shared/kubernetes/install/ubuntu/06-reset-cluster.sh.example` |
 
 ## Goi y mo rong tiep theo
 
@@ -149,3 +170,4 @@ Tai nguyen dung chung nhu config Nginx, Dockerfile mau, shell snippet, hoac file
 - Them `templates/gitlab-ci/continuous-deployment/python/`
 - Them `templates/jenkins/continuous-delivery/java/`
 - Them `examples/` neu muon minh hoa cach inject variable cho tung project
+

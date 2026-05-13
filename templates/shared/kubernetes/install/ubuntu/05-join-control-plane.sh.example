@@ -1,0 +1,47 @@
+#!/bin/bash
+
+# ==============================================================================
+# 05-join-control-plane.sh
+# Join master node bo sung vao cum Kubernetes HA (Mo hinh 3 Master)
+# Chay tren k8s-master-2 va k8s-master-3
+# Yeu cau: da chay 01-prepare-all-nodes.sh truoc do
+# ==============================================================================
+
+set -euo pipefail
+
+# ------------------------------------------------------------------------------
+# Bien cau hinh - THAY DOI cac gia tri nay tu output cua kubeadm init
+# ------------------------------------------------------------------------------
+MASTER_IP="192.168.1.111"
+MASTER_PORT="6443"
+TOKEN="your_token_here"
+DISCOVERY_TOKEN_CA_CERT_HASH="sha256:your_hash_here"
+CERTIFICATE_KEY="your_certificate_key_here"
+
+# ==============================================================================
+# Buoc 1: Join vao cum nhu control-plane node
+# ==============================================================================
+echo ">>> [1/2] Join control-plane node vao cum Kubernetes HA ..."
+sudo kubeadm join ${MASTER_IP}:${MASTER_PORT} \
+    --token ${TOKEN} \
+    --discovery-token-ca-cert-hash ${DISCOVERY_TOKEN_CA_CERT_HASH} \
+    --control-plane \
+    --certificate-key ${CERTIFICATE_KEY}
+
+# ==============================================================================
+# Buoc 2: Cau hinh kubeconfig cho user hien tai
+# ==============================================================================
+echo ">>> [2/2] Cau hinh kubeconfig ..."
+mkdir -p $HOME/.kube
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+echo ""
+echo "==========================================================================="
+echo "  HOAN TAT join control-plane node!"
+echo ""
+echo "  Kiem tra trang thai node:"
+echo "    kubectl get nodes"
+echo ""
+echo "  Kiem tra tat ca control-plane node deu o trang thai Ready."
+echo "==========================================================================="

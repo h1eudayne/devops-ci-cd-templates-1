@@ -50,3 +50,54 @@ templates:
     notes: >
       Pipeline build Docker image, push len private registry, giu buoc deploy
       container o che do manual va co job xem log sau deploy.
+
+shared:
+  - id: shared-k8s-prepare-all-nodes
+    category: kubernetes
+    platform: ubuntu
+    file: templates/shared/kubernetes/install/ubuntu/01-prepare-all-nodes.sh.example
+    maturity: draft
+    notes: >
+      Bash script chuan bi tat ca node cho cum K8s on-premise: cau hinh hosts,
+      tat swap, kernel module, containerd, kubelet/kubeadm/kubectl v1.30.
+
+  - id: shared-k8s-init-single-master
+    category: kubernetes
+    platform: ubuntu
+    file: templates/shared/kubernetes/install/ubuntu/02-init-single-master.sh.example
+    maturity: draft
+    notes: >
+      Khoi tao cum K8s mo hinh 1 master + 2 worker voi Calico CNI.
+
+  - id: shared-k8s-init-ha-master
+    category: kubernetes
+    platform: ubuntu
+    file: templates/shared/kubernetes/install/ubuntu/03-init-ha-master.sh.example
+    maturity: draft
+    notes: >
+      Khoi tao cum K8s mo hinh 3 master HA voi control-plane-endpoint
+      va upload-certs, su dung Calico CNI.
+
+  - id: shared-k8s-join-worker
+    category: kubernetes
+    platform: ubuntu
+    file: templates/shared/kubernetes/install/ubuntu/04-join-worker.sh.example
+    maturity: draft
+    notes: >
+      Join worker node vao cum K8s (mo hinh 1 master + 2 worker).
+
+  - id: shared-k8s-join-control-plane
+    category: kubernetes
+    platform: ubuntu
+    file: templates/shared/kubernetes/install/ubuntu/05-join-control-plane.sh.example
+    maturity: draft
+    notes: >
+      Join control-plane node bo sung vao cum K8s HA (mo hinh 3 master).
+
+  - id: shared-k8s-reset-cluster
+    category: kubernetes
+    platform: ubuntu
+    file: templates/shared/kubernetes/install/ubuntu/06-reset-cluster.sh.example
+    maturity: draft
+    notes: >
+      Reset cum K8s de cai lai tu dau: kubeadm reset, xoa etcd va manifests.

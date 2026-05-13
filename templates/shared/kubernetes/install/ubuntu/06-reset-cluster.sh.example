@@ -1,0 +1,44 @@
+#!/bin/bash
+
+# ==============================================================================
+# 06-reset-cluster.sh
+# Reset cum Kubernetes de cai lai tu dau
+# Chay tren TAT CA cac node (master va worker)
+# ==============================================================================
+
+set -euo pipefail
+
+echo ">>> Reset Kubernetes cluster ..."
+
+# ==============================================================================
+# Buoc 1: Reset kubeadm
+# ==============================================================================
+echo ">>> [1/4] Reset kubeadm ..."
+sudo kubeadm reset -f
+
+# ==============================================================================
+# Buoc 2: Xoa du lieu etcd
+# ==============================================================================
+echo ">>> [2/4] Xoa du lieu etcd ..."
+sudo rm -rf /var/lib/etcd
+
+# ==============================================================================
+# Buoc 3: Xoa manifest Kubernetes
+# ==============================================================================
+echo ">>> [3/4] Xoa manifest Kubernetes ..."
+sudo rm -rf /etc/kubernetes/manifests/*
+
+# ==============================================================================
+# Buoc 4: Xoa kubeconfig (neu ton tai)
+# ==============================================================================
+echo ">>> [4/4] Xoa kubeconfig ..."
+rm -rf $HOME/.kube/config
+
+echo ""
+echo "==========================================================================="
+echo "  HOAN TAT reset cluster!"
+echo ""
+echo "  Bay gio co the chay lai:"
+echo "    - 02-init-single-master.sh (mo hinh 1 master + 2 worker)"
+echo "    - 03-init-ha-master.sh (mo hinh 3 master HA)"
+echo "==========================================================================="

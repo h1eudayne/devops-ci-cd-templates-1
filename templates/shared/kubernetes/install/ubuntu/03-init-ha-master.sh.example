@@ -1,0 +1,60 @@
+#!/bin/bash
+
+# ==============================================================================
+# 03-init-ha-master.sh
+# Khoi tao cum Kubernetes: Mo hinh 3 Master HA (control-plane + worker)
+# Chi chay tren server k8s-master-1
+# Yeu cau: da chay 01-prepare-all-nodes.sh truoc do
+# ==============================================================================
+
+set -euo pipefail
+
+# ------------------------------------------------------------------------------
+# Bien cau hinh - thay doi cho phu hop
+# ------------------------------------------------------------------------------
+CONTROL_PLANE_ENDPOINT="192.168.1.111:6443"
+CALICO_VERSION="v3.25.0"
+CALICO_MANIFEST="https://raw.githubusercontent.com/projectcalico/calico/${CALICO_VERSION}/manifests/calico.yaml"
+
+# ==============================================================================
+# Buoc 1: Khoi tao control plane voi HA endpoint
+# ==============================================================================
+echo ">>> [1/3] Khoi tao Kubernetes HA control plane ..."
+sudo kubeadm init \
+    --control-plane-endpoint "${CONTROL_PLANE_ENDPOINT}" \
+    --upload-certs
+
+# ==============================================================================
+# Buoc 2: Cau hinh kubeconfig cho user hien tai
+# ==============================================================================
+echo ">>> [2/3] Cau hinh kubeconfig ..."
+mkdir -p $HOME/.kube
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+# ==============================================================================
+# Buoc 3: Cai dat Calico CNI
+# ==============================================================================
+echo ">>> [3/3] Cai dat Calico CNI ..."
+kubectl apply -f ${CALICO_MANIFEST}
+
+echo ""
+echo "==========================================================================="
+echo "  HOAN TAT khoi tao Master HA!"
+echo ""
+echo "  Kiem tra trang thai node:"
+echo "    kubectl get nodes"
+echo ""
+echo "  QUAN TRONG: Luu lai 3 thong tin tu output phia tren:"
+echo "    1. --token <your_token>"
+echo "    2. --discovery-token-ca-cert-hash <your_sha>"
+echo "    3. --certificate-key <your_cert>"
+echo ""
+echo "  Su dung 3 thong tin nay de chay 05-join-control-plane.sh"
+echo "  tren k8s-master-2 va k8s-master-3."
+echo ""
+echo "  Neu can tao lai cert key sau nay:"
+echo "    sudo kubeadm init phase upload-certs --upload-certs"
+echo "  Neu can tao lai token:"
+echo "    kubeadm token create --print-join-command"
+echo "==========================================================================="

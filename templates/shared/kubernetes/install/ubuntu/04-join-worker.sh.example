@@ -1,0 +1,37 @@
+#!/bin/bash
+
+# ==============================================================================
+# 04-join-worker.sh
+# Join worker node vao cum Kubernetes (Mo hinh 1 Master + 2 Worker)
+# Chay tren k8s-master-2 va k8s-master-3
+# Yeu cau: da chay 01-prepare-all-nodes.sh truoc do
+# ==============================================================================
+
+set -euo pipefail
+
+# ------------------------------------------------------------------------------
+# Bien cau hinh - THAY DOI cac gia tri nay tu output cua kubeadm init
+# ------------------------------------------------------------------------------
+MASTER_IP="192.168.1.111"
+MASTER_PORT="6443"
+TOKEN="your_token_here"
+DISCOVERY_TOKEN_CA_CERT_HASH="sha256:your_hash_here"
+
+# ==============================================================================
+# Join vao cum
+# ==============================================================================
+echo ">>> Join worker node vao cum Kubernetes ..."
+sudo kubeadm join ${MASTER_IP}:${MASTER_PORT} \
+    --token ${TOKEN} \
+    --discovery-token-ca-cert-hash ${DISCOVERY_TOKEN_CA_CERT_HASH}
+
+echo ""
+echo "==========================================================================="
+echo "  HOAN TAT join worker node!"
+echo ""
+echo "  Kiem tra trang thai node tren master:"
+echo "    kubectl get nodes"
+echo ""
+echo "  Node moi se o trang thai NotReady trong vai phut"
+echo "  cho den khi Calico CNI khoi dong xong."
+echo "==========================================================================="

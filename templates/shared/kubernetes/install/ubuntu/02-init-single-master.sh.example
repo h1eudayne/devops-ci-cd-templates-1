@@ -1,0 +1,50 @@
+#!/bin/bash
+
+# ==============================================================================
+# 02-init-single-master.sh
+# Khoi tao cum Kubernetes: Mo hinh 1 Master + 2 Worker
+# Chi chay tren server k8s-master-1
+# Yeu cau: da chay 01-prepare-all-nodes.sh truoc do
+# ==============================================================================
+
+set -euo pipefail
+
+# ------------------------------------------------------------------------------
+# Bien cau hinh
+# ------------------------------------------------------------------------------
+CALICO_VERSION="v3.25.0"
+CALICO_MANIFEST="https://raw.githubusercontent.com/projectcalico/calico/${CALICO_VERSION}/manifests/calico.yaml"
+
+# ==============================================================================
+# Buoc 1: Khoi tao control plane
+# ==============================================================================
+echo ">>> [1/3] Khoi tao Kubernetes control plane ..."
+sudo kubeadm init
+
+# ==============================================================================
+# Buoc 2: Cau hinh kubeconfig cho user hien tai
+# ==============================================================================
+echo ">>> [2/3] Cau hinh kubeconfig ..."
+mkdir -p $HOME/.kube
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+# ==============================================================================
+# Buoc 3: Cai dat Calico CNI
+# ==============================================================================
+echo ">>> [3/3] Cai dat Calico CNI ..."
+kubectl apply -f ${CALICO_MANIFEST}
+
+echo ""
+echo "==========================================================================="
+echo "  HOAN TAT khoi tao Master!"
+echo ""
+echo "  Kiem tra trang thai node:"
+echo "    kubectl get nodes"
+echo ""
+echo "  De worker join vao cum, chay lenh 'kubeadm join' duoc in o tren"
+echo "  tren cac server k8s-master-2 va k8s-master-3."
+echo ""
+echo "  Neu can tao lai token sau nay:"
+echo "    kubeadm token create --print-join-command"
+echo "==========================================================================="
