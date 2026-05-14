@@ -1,0 +1,98 @@
+#!/bin/bash
+
+# ==============================================================================
+# mount-disk.sh
+# Gan disk (o cung) vao thu muc /data
+#
+# Luu y: Khong luu du lieu vao phan vung goc, ta se luu vao o cung rieng.
+#         Khi server co bi loi thi du lieu van con.
+#
+# Yeu cau:
+#   - User co quyen sudo
+#   - O cung /dev/sdb da duoc gan vao server (kiem tra bang lsblk)
+#
+# Cach dung:
+#   1. Copy file nay va doi ten bo .example:
+#        cp mount-disk.sh.example mount-disk.sh
+#   2. Chinh sua bien DISK_DEVICE va MOUNT_POINT neu can
+#   3. Chay:
+#        chmod +x mount-disk.sh
+#        sudo bash mount-disk.sh
+# ==============================================================================
+
+set -euo pipefail
+
+# ------------------------------------------------------------------------------
+# Bien cau hinh - thay doi cho phu hop voi moi truong
+# ------------------------------------------------------------------------------
+DISK_DEVICE="/dev/sdb"       # O cung can format va mount
+MOUNT_POINT="/data"          # Thu muc mount dich
+FS_TYPE="ext4"               # Loai filesystem
+
+# ==============================================================================
+# Buoc 1: Kiem tra o cung co ton tai khong
+# ==============================================================================
+echo ">>> [1/5] Kiem tra o cung ${DISK_DEVICE} ..."
+if ! lsblk "${DISK_DEVICE}" &>/dev/null; then
+    echo "  LOI: Khong tim thay o cung ${DISK_DEVICE}!"
+    echo "  Kiem tra lai bang lenh: lsblk"
+    exit 1
+fi
+lsblk "${DISK_DEVICE}"
+echo ""
+
+# ==============================================================================
+# Buoc 2: Format o cung
+# ==============================================================================
+echo ">>> [2/5] Format ${DISK_DEVICE} thanh ${FS_TYPE} ..."
+echo "  CANH BAO: Thao tac nay se XOA TOAN BO du lieu tren ${DISK_DEVICE}!"
+read -p "  Ban co chac chan muon tiep tuc? (y/N): " CONFIRM
+if [[ "${CONFIRM}" != "y" && "${CONFIRM}" != "Y" ]]; then
+    echo "  Huy bo."
+    exit 0
+fi
+
+sudo mkfs.ext4 -m 0 "${DISK_DEVICE}"
+echo "  Format thanh cong."
+echo ""
+
+# ==============================================================================
+# Buoc 3: Tao thu muc mount
+# ==============================================================================
+echo ">>> [3/5] Tao thu muc ${MOUNT_POINT} ..."
+if [ ! -d "${MOUNT_POINT}" ]; then
+    sudo mkdir -p "${MOUNT_POINT}"
+    echo "  Da tao thu muc ${MOUNT_POINT}."
+else
+    echo "  Thu muc ${MOUNT_POINT} da ton tai, bo qua."
+fi
+
+# ==============================================================================
+# Buoc 4: Them vao /etc/fstab de tu dong mount khi khoi dong
+# ==============================================================================
+echo ">>> [4/5] Cau hinh /etc/fstab ..."
+FSTAB_ENTRY="${DISK_DEVICE}  ${MOUNT_POINT}  ${FS_TYPE}  defaults  0  0"
+
+if grep -q "${DISK_DEVICE}.*${MOUNT_POINT}" /etc/fstab; then
+    echo "  Entry da ton tai trong /etc/fstab, bo qua."
+else
+    echo "${FSTAB_ENTRY}" | sudo tee -a /etc/fstab
+    echo "  Da them vao /etc/fstab."
+fi
+
+# ==============================================================================
+# Buoc 5: Mount va kiem tra
+# ==============================================================================
+echo ">>> [5/5] Mount va kiem tra ..."
+sudo mount -a
+
+echo ""
+echo "==========================================================================="
+echo "  HOAN TAT gan disk!"
+echo ""
+echo "  Ket qua:"
+sudo df -h "${MOUNT_POINT}"
+echo ""
+echo "  Thu muc ${MOUNT_POINT} da san sang de luu tru du lieu."
+echo "  O cung se tu dong mount khi server khoi dong lai."
+echo "==========================================================================="
