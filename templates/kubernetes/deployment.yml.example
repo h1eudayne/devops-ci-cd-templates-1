@@ -1,0 +1,77 @@
+# =============================================================================
+# Template: Kubernetes Deployment
+# -----------------------------------------------------------------------------
+# Deployment quan ly viec tao va cap nhat cac Pod theo kieu declarative.
+# Ho tro rolling update, rollback va scale so luong replicas.
+#
+# Huong dan:
+#   1. Copy file nay va doi ten bo .example
+#   2. Thay cac placeholder:
+#      - <APP_NAME>        : ten ung dung (vd: car-serv, api-gateway)
+#      - <NAMESPACE>       : namespace da tao (vd: car-serv)
+#      - <DOCKER_IMAGE>    : docker image (vd: elroydevops/car-serv:latest)
+#      - <CONTAINER_PORT>  : port container lang nghe (vd: 80, 8080, 3000)
+#      - <REPLICAS>        : so luong pod chay song song (vd: 2, 3)
+#   3. Apply:
+#      kubectl apply -f namespace.yml      # tao namespace truoc
+#      kubectl apply -f deployment.yml
+#   4. Kiem tra:
+#      kubectl get deployments -n <NAMESPACE>
+#      kubectl get pods -n <NAMESPACE>
+#      kubectl rollout status deployment/<APP_NAME>-deployment -n <NAMESPACE>
+#
+# Luu y:
+#   - Chinh resource requests/limits phu hop voi ung dung.
+#   - Nen ket hop voi Service de expose ung dung ra ngoai.
+#   - Mac dinh dung RollingUpdate strategy, co the doi thanh Recreate.
+# =============================================================================
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: <APP_NAME>-deployment
+  namespace: <NAMESPACE>
+  labels:
+    app: <APP_NAME>
+spec:
+  replicas: <REPLICAS>
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: <APP_NAME>
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: <APP_NAME>
+    spec:
+      containers:
+        - name: <APP_NAME>
+          image: <DOCKER_IMAGE>
+          imagePullPolicy: Always
+          ports:
+            - containerPort: <CONTAINER_PORT>
+              protocol: TCP
+          # resources:
+          #   requests:
+          #     cpu: "100m"
+          #     memory: "128Mi"
+          #   limits:
+          #     cpu: "500m"
+          #     memory: "512Mi"
+          # livenessProbe:
+          #   httpGet:
+          #     path: /healthz
+          #     port: <CONTAINER_PORT>
+          #   initialDelaySeconds: 30
+          #   periodSeconds: 10
+          # readinessProbe:
+          #   httpGet:
+          #     path: /ready
+          #     port: <CONTAINER_PORT>
+          #   initialDelaySeconds: 5
+          #   periodSeconds: 5
