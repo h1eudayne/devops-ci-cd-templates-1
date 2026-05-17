@@ -1,0 +1,16 @@
+# =============================================================================
+# Template: Kubernetes Namespace
+# -----------------------------------------------------------------------------
+# Tao namespace rieng de cach ly tai nguyen cho ung dung.
+#
+# Huong dan:
+#   1. Copy file nay va doi ten bo .example
+#   2. Thay <APP_NAME> bang ten ung dung thuc te (vd: car-serv, api-gateway, ...)
+#   3. Apply:  kubectl apply -f namespace.yml
+# =============================================================================
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: <APP_NAME>
+

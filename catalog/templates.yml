@@ -101,3 +101,20 @@ shared:
     maturity: draft
     notes: >
       Reset cum K8s de cai lai tu dau: kubeadm reset, xoa etcd va manifests.
+
+kubernetes:
+  - id: k8s-namespace-template
+    kind: Namespace
+    file: templates/kubernetes/namespace.yml.example
+    maturity: draft
+    notes: >
+      Template tao Namespace cho ung dung. Thay <APP_NAME> bang ten thuc te.
+
+  - id: k8s-pod-template
+    kind: Pod
+    file: templates/kubernetes/pod.yml.example
+    maturity: draft
+    notes: >
+      Template tao Pod co resource limits. Thay <APP_NAME>, <NAMESPACE>,
+      <DOCKER_IMAGE>, <CONTAINER_PORT> bang gia tri thuc te.
+

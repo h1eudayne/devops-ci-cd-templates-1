@@ -1,0 +1,35 @@
+# =============================================================================
+# Template: Kubernetes Pod
+# -----------------------------------------------------------------------------
+# Pod chay ung dung tu Docker image.
+#
+# Huong dan:
+#   1. Copy file nay va doi ten bo .example
+#   2. Thay cac placeholder:
+#      - <APP_NAME>       : ten ung dung (vd: car-serv)
+#      - <NAMESPACE>      : namespace da tao (vd: car-serv)
+#      - <DOCKER_IMAGE>   : docker image (vd: devops/car-serv)
+#      - <CONTAINER_PORT> : port container lang nghe (vd: 80)
+#   3. Apply:
+#      kubectl apply -f namespace.yml   # tao namespace truoc
+#      kubectl apply -f pod.yml
+#   4. Kiem tra:
+#      kubectl get pods -n <NAMESPACE>
+#      kubectl logs <APP_NAME> -n <NAMESPACE>
+#
+# Luu y:
+#   - Nen dung Deployment thay vi Pod truc tiep cho production.
+#   - Chinh resource requests/limits phu hop voi ung dung.
+# =============================================================================
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: <APP_NAME>
+  namespace: <NAMESPACE>
+spec:
+  containers:
+  - name: <APP_NAME>
+    image: <DOCKER_IMAGE>
+    ports:
+    - containerPort: <CONTAINER_PORT>

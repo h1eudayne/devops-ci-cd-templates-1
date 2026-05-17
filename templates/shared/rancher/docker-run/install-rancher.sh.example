@@ -1,0 +1,52 @@
+#!/bin/bash
+# ============================================================
+# Install Rancher Server bang docker run
+# ============================================================
+# Phien ban: v2.9.2
+# Yeu cau: Docker da cai dat, port 80/443 chua bi chiem
+# Volume: /data/rancher luu tren o cung rieng
+# ============================================================
+
+# docker run --name rancher-server -d --restart=unless-stopped -p 80:80 -p 443:443 -v /data/rancher:/var/lib/rancher --privileged rancher/rancher:v2.9.2
+
+set -e
+
+RANCHER_VERSION="v2.9.2"
+RANCHER_CONTAINER_NAME="rancher-server"
+RANCHER_DATA_DIR="/data/rancher"
+
+echo "============================================"
+echo " Cai dat Rancher Server ${RANCHER_VERSION}"
+echo "============================================"
+
+# 1. Tao thu muc data neu chua co
+echo "[1/3] Tao thu muc data: ${RANCHER_DATA_DIR}"
+sudo mkdir -p "${RANCHER_DATA_DIR}"
+
+# 2. Chay Rancher container
+echo "[2/3] Khoi chay Rancher container..."
+docker run \
+  --name "${RANCHER_CONTAINER_NAME}" \
+  -d \
+  --restart=unless-stopped \
+  -p 80:80 \
+  -p 443:443 \
+  -v "${RANCHER_DATA_DIR}":/var/lib/rancher \
+  --privileged \
+  rancher/rancher:"${RANCHER_VERSION}"
+
+# 3. Kiem tra trang thai
+echo "[3/3] Kiem tra trang thai container..."
+sleep 5
+docker ps --filter "name=${RANCHER_CONTAINER_NAME}" --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
+
+echo ""
+echo "============================================"
+echo " Rancher da duoc cai dat thanh cong!"
+echo "============================================"
+echo ""
+echo "Truy cap Rancher UI tai: https://<IP-server>"
+echo ""
+echo "Lay mat khau bootstrap bang lenh:"
+echo "  docker logs ${RANCHER_CONTAINER_NAME} 2>&1 | grep 'Bootstrap Password:'"
+echo ""
