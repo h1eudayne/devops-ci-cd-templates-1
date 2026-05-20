@@ -98,7 +98,7 @@ docker run \
   -p 443:443 \
   -v /data/rancher:/var/lib/rancher \
   --privileged \
-  rancher/rancher:v2.9.2
+  rancher/rancher:v2.14.1
 ```
 
 ---
