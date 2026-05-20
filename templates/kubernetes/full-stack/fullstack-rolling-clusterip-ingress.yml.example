@@ -1,0 +1,86 @@
+# =============================================================================
+# Template: Deployment (RollingUpdate) + Service (ClusterIP) + Ingress (Nginx)
+# =============================================================================
+# Thay the cac placeholder:
+#   <APP_NAME>        : ten ung dung           (vd: car-serv)
+#   <NAMESPACE>       : namespace              (vd: car-serv)
+#   <DOCKER_IMAGE>    : docker image           (vd: elroydevops/car-serv:latest)
+#   <CONTAINER_PORT>  : port container         (vd: 80, 8080)
+#   <REPLICAS>        : so pod                 (vd: 2)
+#   <DOMAIN>          : domain truy cap        (vd: app.devopsedu.vn)
+#
+# Cach dung:
+#   kubectl apply -f fullstack.yml
+#   kubectl get all -n <NAMESPACE>
+# =============================================================================
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: <APP_NAME>
+  name: <APP_NAME>-deployment
+  namespace: <NAMESPACE>
+spec:
+  replicas: <REPLICAS>
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: <APP_NAME>
+  template:
+    metadata:
+      labels:
+        app: <APP_NAME>
+      namespace: <NAMESPACE>
+    spec:
+      containers:
+        - image: <DOCKER_IMAGE>
+          imagePullPolicy: Always
+          name: <APP_NAME>
+          ports:
+            - containerPort: <CONTAINER_PORT>
+              name: tcp
+              protocol: TCP
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: <APP_NAME>-service
+  namespace: <NAMESPACE>
+spec:
+  type: ClusterIP
+  selector:
+    app: <APP_NAME>
+  ports:
+    - name: tcp
+      protocol: TCP
+      port: 80
+      targetPort: <CONTAINER_PORT>
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: <APP_NAME>-ingress
+  namespace: <NAMESPACE>
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: <DOMAIN>
+      http:
+        paths:
+          - backend:
+              service:
+                name: <APP_NAME>-service
+                port:
+                  number: 80
+            path: /
+            pathType: Prefix

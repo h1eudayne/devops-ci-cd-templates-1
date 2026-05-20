@@ -118,3 +118,13 @@ kubernetes:
       Template tao Pod co resource limits. Thay <APP_NAME>, <NAMESPACE>,
       <DOCKER_IMAGE>, <CONTAINER_PORT> bang gia tri thuc te.
 
+  - id: k8s-fullstack-rolling-clusterip-ingress
+    kind: Deployment+Service+Ingress
+    file: templates/kubernetes/full-stack/fullstack-rolling-clusterip-ingress.yml.example
+    maturity: draft
+    notes: >
+      Template gom day du Deployment (RollingUpdate) + Service (ClusterIP) +
+      Ingress (Nginx) trong 1 file. Thay <APP_NAME>, <NAMESPACE>, <DOCKER_IMAGE>,
+      <CONTAINER_PORT>, <REPLICAS>, <DOMAIN> bang gia tri thuc te.
+      Co san phan resource limits, health check, TLS de bat khi can.
+
