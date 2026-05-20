@@ -398,6 +398,12 @@ Kiem tra:
 kubectl get configmap -n ecommerce
 ```
 
+> **Luu y**: Khi thay doi noi dung ConfigMap, pod **khong tu dong cap nhat** (dac biet khi dung `subPath`).
+> Can redeploy lai pod de ap dung cau hinh moi:
+> ```bash
+> kubectl rollout restart deployment/ecommerce-backend-deployment -n ecommerce
+> ```
+
 ### 4. Apply file YAML fullstack
 
 Su dung template [`fullstack-rolling-clusterip-ingress.yml.example`](../../templates/kubernetes/full-stack/fullstack-rolling-clusterip-ingress.yml.example).
