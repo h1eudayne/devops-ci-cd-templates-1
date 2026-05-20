@@ -346,15 +346,91 @@ Tao namespace cho du an (vd: `ecommerce`).
 
 Su dung template [`fullstack-rolling-clusterip-ingress.yml.example`](../templates/kubernetes/full-stack/fullstack-rolling-clusterip-ingress.yml.example).
 
-Thay the cac placeholder va apply:
+Thay the cac placeholder va apply. Lam rieng cho **frontend** va **backend** (2 file YAML rieng).
+
+**Vi du file YAML cho Backend:**
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: ecommerce-backend
+  name: ecommerce-backend-deployment
+  namespace: ecommerce
+spec:
+  replicas: 1
+  revisionHistoryLimit: 11
+  selector:
+    matchLabels:
+      app: ecommerce-backend
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: ecommerce-backend
+      namespace: ecommerce
+    spec:
+      containers:
+        - image: voduchieu1/ecommerce-backend:v1
+          imagePullPolicy: Always
+          name: ecommerce-backend
+          ports:
+            - containerPort: 8080
+              name: tcp
+              protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ecommerce-backend-service
+  namespace: ecommerce
+spec:
+  internalTrafficPolicy: Cluster
+  ipFamilies:
+    - IPv4
+  ipFamilyPolicy: SingleStack
+  ports:
+    - name: tcp
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    app: ecommerce-backend
+  sessionAffinity: None
+  type: ClusterIP
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ecommerce-backend-ingress
+  namespace: ecommerce
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: api-ecommerce.h1eudayne.tech
+      http:
+        paths:
+          - backend:
+              service:
+                name: ecommerce-backend-service
+                port:
+                  number: 8080
+            path: /
+            pathType: Prefix
+```
+
+Apply:
 
 ```bash
-kubectl apply -f fullstack.yml
+kubectl apply -f ecommerce-backend.yml
 ```
 
 > Nho chon dung namespace khi apply.
-
-Lam rieng cho **frontend** va **backend** (2 file YAML rieng hoac gop chung).
 
 ### 4. Add host tren may client (neu chua co DNS)
 
