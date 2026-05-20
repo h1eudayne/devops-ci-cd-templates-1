@@ -13,7 +13,6 @@
 #   kubectl apply -f fullstack.yml
 #   kubectl get all -n <NAMESPACE>
 # =============================================================================
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -23,15 +22,15 @@ metadata:
   namespace: <NAMESPACE>
 spec:
   replicas: <REPLICAS>
-  strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxSurge: 25%
-      maxUnavailable: 25%
-  revisionHistoryLimit: 10
+  revisionHistoryLimit: 11
   selector:
     matchLabels:
       app: <APP_NAME>
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
   template:
     metadata:
       labels:
@@ -46,26 +45,27 @@ spec:
             - containerPort: <CONTAINER_PORT>
               name: tcp
               protocol: TCP
-
 ---
-
 apiVersion: v1
 kind: Service
 metadata:
   name: <APP_NAME>-service
   namespace: <NAMESPACE>
 spec:
-  type: ClusterIP
-  selector:
-    app: <APP_NAME>
+  internalTrafficPolicy: Cluster
+  ipFamilies:
+    - IPv4
+  ipFamilyPolicy: SingleStack
   ports:
     - name: tcp
-      protocol: TCP
       port: 80
+      protocol: TCP
       targetPort: <CONTAINER_PORT>
-
+  selector:
+    app: <APP_NAME>
+  sessionAffinity: None
+  type: ClusterIP
 ---
-
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
