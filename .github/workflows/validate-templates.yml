@@ -198,30 +198,34 @@ jobs:
       - name: Validate catalog references
         run: |
           Write-Host "Validating catalog file references..."
-          python -c @"
-import yaml, os, sys
-with open('catalog/templates.yml', encoding='utf-8') as f:
-    catalog = yaml.safe_load(f)
-
-templates = catalog.get('templates', [])
-errors = []
-for t in templates:
-    file_path = t.get('file', '')
-    if file_path and not os.path.exists(file_path):
-        errors.append(f'Missing: {file_path} (id: {t.get(\"id\", \"unknown\")})')
-
-if errors:
-    print(f'ERROR: {len(errors)} missing file(s):')
-    for e in errors:
-        print(f'  {e}')
-    sys.exit(1)
-else:
-    print(f'OK: All {len(templates)} catalog entries verified')
-"@
-          if ($LASTEXITCODE -ne 0) {
-            Write-Error "Catalog validation failed - some referenced files are missing"
+          $catalogPath = "catalog\templates.yml"
+          if (-not (Test-Path $catalogPath)) {
+            Write-Error "catalog/templates.yml not found"
             exit 1
           }
+          $content = Get-Content $catalogPath -Raw -Encoding utf8
+          $lines = $content -split "`n"
+          $fileLines = $lines | Where-Object { $_ -match '^\s*file:\s*' }
+          $missing = 0
+          $checked = 0
+          foreach ($line in $fileLines) {
+            $filePath = ($line -replace '^\s*file:\s*', '').Trim().Trim('"').Trim("'")
+            if ($filePath -and $filePath -ne '') {
+              $checked++
+              if (-not (Test-Path $filePath)) {
+                Write-Host "  MISSING: $filePath"
+                $missing++
+              } else {
+                Write-Host "  OK: $filePath"
+              }
+            }
+          }
+          if ($missing -gt 0) {
+            Write-Error "Catalog validation failed: $missing of $checked referenced file(s) are missing"
+            exit 1
+          }
+          Write-Host "OK: All $checked catalog file references verified"
+
 
       - name: Summary
         run: |
