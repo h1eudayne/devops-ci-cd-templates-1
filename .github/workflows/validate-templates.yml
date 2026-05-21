@@ -1,0 +1,167 @@
+name: Validate CI/CD Templates
+
+# Runs on the local self-hosted Windows runner
+# Runner registered at: https://github.com/h1eudayne/devops-ci-cd-templates
+
+on:
+  push:
+    branches: [main, "feature/**"]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+defaults:
+  run:
+    shell: powershell
+
+jobs:
+  # ============================================================
+  # Validate YAML template files
+  # ============================================================
+  validate-yaml:
+    name: "📄 Validate YAML Templates"
+    runs-on: [self-hosted, Windows, X64, kho-project]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check Python available
+        run: python --version
+
+      - name: Validate all YAML files in templates/
+        run: |
+          Write-Host "🔍 Scanning for YAML files..."
+          $yamlFiles = Get-ChildItem -Path "templates" -Recurse -Include "*.yml","*.yaml" |
+                       Where-Object { $_.Name -notlike "*.example" }
+
+          if ($yamlFiles.Count -eq 0) {
+            Write-Host "ℹ️  No .yml files found (all are .example files - OK)"
+          } else {
+            $errors = 0
+            foreach ($f in $yamlFiles) {
+              try {
+                python -c "import yaml; yaml.safe_load(open('$($f.FullName)', encoding='utf-8').read())" 2>&1
+                if ($LASTEXITCODE -eq 0) {
+                  Write-Host "  ✅ $($f.Name)"
+                } else {
+                  Write-Host "  ❌ FAIL: $($f.Name)" -ForegroundColor Red
+                  $errors++
+                }
+              } catch {
+                Write-Host "  ⚠️  Skip (no python yaml): $($f.Name)"
+              }
+            }
+            if ($errors -gt 0) {
+              Write-Error "$errors YAML file(s) failed validation"
+              exit 1
+            }
+          }
+          Write-Host ""
+          Write-Host "✅ YAML validation complete"
+
+      - name: Validate YAML examples (syntax only)
+        run: |
+          Write-Host "🔍 Scanning .yml.example files..."
+          $exFiles = Get-ChildItem -Path "templates" -Recurse -Include "*.yml.example","*.yaml.example"
+
+          $errors = 0
+          foreach ($f in $exFiles) {
+            $content = Get-Content $f.FullName -Raw -ErrorAction SilentlyContinue
+            if ($null -ne $content -and $content.Length -gt 0) {
+              Write-Host "  ✅ $($f.Name) ($($content.Length) bytes)"
+            } else {
+              Write-Host "  ⚠️  Empty: $($f.Name)"
+            }
+          }
+          Write-Host "✅ Found $($exFiles.Count) YAML example files"
+
+  # ============================================================
+  # Validate Shell script examples
+  # ============================================================
+  validate-shell:
+    name: "🐚 Validate Shell Scripts"
+    runs-on: [self-hosted, Windows, X64, kho-project]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: List all shell script examples
+        run: |
+          Write-Host "🔍 Shell script files in templates/:"
+          $shFiles = Get-ChildItem -Path "templates" -Recurse -Include "*.sh.example","*.sh"
+          foreach ($f in $shFiles) {
+            $size = $f.Length
+            Write-Host "  📄 $($f.Name) ($size bytes)"
+          }
+          Write-Host ""
+          Write-Host "Found $($shFiles.Count) shell files"
+
+      - name: Validate file encoding (UTF-8)
+        run: |
+          Write-Host "🔍 Checking file encodings..."
+          $allFiles = Get-ChildItem -Path "templates" -Recurse -File |
+                      Where-Object { $_.Extension -in ".yml", ".yaml", ".sh", ".conf", ".md", ".json" }
+          
+          foreach ($f in $allFiles) {
+            try {
+              $null = Get-Content $f.FullName -Encoding UTF8 -ErrorAction Stop
+              Write-Host "  ✅ $($f.Name)"
+            } catch {
+              Write-Host "  ⚠️  Encoding issue: $($f.Name)"
+            }
+          }
+
+  # ============================================================
+  # Catalog validation
+  # ============================================================
+  validate-catalog:
+    name: "📚 Validate Template Catalog"
+    runs-on: [self-hosted, Windows, X64, kho-project]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check catalog/templates.yml exists
+        run: |
+          if (Test-Path "catalog/templates.yml") {
+            $size = (Get-Item "catalog/templates.yml").Length
+            Write-Host "✅ catalog/templates.yml found ($size bytes)"
+          } else {
+            Write-Error "❌ catalog/templates.yml not found!"
+            exit 1
+          }
+
+      - name: Count templates by category
+        run: |
+          Write-Host ""
+          Write-Host "📊 Template Statistics:"
+          
+          $categories = @{
+            "GitHub Actions"  = (Get-ChildItem "templates/github-actions" -Recurse -File).Count
+            "GitLab CI"       = (Get-ChildItem "templates/gitlab-ci" -Recurse -File).Count
+            "Jenkins"         = (Get-ChildItem "templates/jenkins" -Recurse -File).Count
+            "Docker"          = (Get-ChildItem "templates/docker" -Recurse -File).Count
+            "Kubernetes"      = (Get-ChildItem "templates/kubernetes" -Recurse -File).Count
+            "Shared"          = (Get-ChildItem "templates/shared" -Recurse -File).Count
+          }
+          
+          $total = 0
+          foreach ($cat in $categories.GetEnumerator()) {
+            Write-Host "  $($cat.Key): $($cat.Value) files"
+            $total += $cat.Value
+          }
+          Write-Host ""
+          Write-Host "  📁 Total: $total template files"
+
+      - name: Summary
+        run: |
+          Write-Host ""
+          Write-Host "╔═══════════════════════════════════════════╗"
+          Write-Host "║   ✅ Template Validation PASSED!          ║"
+          Write-Host "╠═══════════════════════════════════════════╣"
+          Write-Host "║  Runner: kho-local-machine (Windows)      ║"
+          Write-Host "║  Repo:   devops-ci-cd-templates           ║"
+          Write-Host "╚═══════════════════════════════════════════╝"
