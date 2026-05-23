@@ -6,6 +6,8 @@ Hướng dẫn cấu hình **Requests** (yêu cầu tài nguyên tối thiểu) 
 
 ## So sánh Request và Limit
 
+![So sánh Request và Limit trong Kubernetes](./request-vs-limit-comparison.png)
+
 | Thuoc tinh | Request (yeu cau) | Limit (gioi han) |
 |---|---|---|
 | **Muc dich** | Dam bao container co tai nguyen toi thieu de chay | Gioi han luong tai nguyen toi da container co the su dung |
