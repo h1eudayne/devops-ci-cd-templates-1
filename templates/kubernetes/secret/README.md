@@ -1,4 +1,4 @@
-# 🔐 Kubernetes Secret – Hướng dẫn sử dụng
+# Kubernetes Secret – Hướng dẫn sử dụng
 
 Hướng dẫn cấu hình và sử dụng **Secret** để lưu trữ thông tin kết nối database MariaDB cho ứng dụng ecommerce backend.
 
@@ -16,7 +16,7 @@ metadata:
   namespace: ecommerce
 type: Opaque
 stringData:
-  MARIADB_HOST: "192.168.209.115"   # ← Thay bằng IP MariaDB của bạn
+  MARIADB_HOST: "192.168.209.115"   # Thay bằng IP MariaDB của bạn
   MARIADB_DB: "full-stack-ecommerce"
   MARIADB_PORT: "3306"
   MARIADB_USERNAME: "ecommerceapp"
@@ -45,7 +45,7 @@ kubectl get secret ecommerce-backend-database-connection -n ecommerce
 
 1. Truy cập **Rancher UI** → chọn cluster và namespace `ecommerce`
 2. Vào **Workloads** → **Deployments** → chọn Deployment của backend
-3. Nhấn **⋮ Edit Config**
+3. Nhấn **Edit Config**
 4. Chuyển sang tab **Environment Variables**
 5. Nhấn **Add Variable** → chọn loại **From Secret**
 6. Tìm và chọn Secret: `ecommerce-backend-database-connection`
@@ -101,21 +101,21 @@ data:
 
 ---
 
-## 📁 Cấu trúc file liên quan
+## Cấu trúc file liên quan
 
 ```
 templates/kubernetes/
 ├── secret/
-│   └── ecommerce-backend-database-connection.yml   ← Secret (file này)
+│   └── ecommerce-backend-database-connection.yml   <- Secret (file này)
 ├── configmap/
-│   └── ecommerce-backend-config.yml                ← ConfigMap tham chiếu biến
+│   └── ecommerce-backend-config.yml                <- ConfigMap tham chiếu biến
 └── deployment/
-    └── ecommerce-backend-deployment.yml             ← Deployment mount Secret
+    └── ecommerce-backend-deployment.yml             <- Deployment mount Secret
 ```
 
 ---
 
-## ✅ Checklist triển khai
+## Checklist triển khai
 
 - [ ] Cập nhật `MARIADB_HOST` đúng IP môi trường
 - [ ] Apply Secret lên cluster (`kubectl apply`)

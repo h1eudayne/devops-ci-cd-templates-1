@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ecommerce-backend
+  namespace: ecommerce
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ecommerce-backend
+  template:
+    metadata:
+      labels:
+        app: ecommerce-backend
+    spec:
+      containers:
+        - name: ecommerce-backend
+          image: domain-harbor.com/devopseduvn/ecommerce-backend:v1
+          envFrom:
+            - secretRef:
+                name: ecommerce-backend-database-connection
+                optional: false
+      imagePullSecrets:
+        - name: auth-registry   # Secret xác thực Harbor tạo ở Bước 1
