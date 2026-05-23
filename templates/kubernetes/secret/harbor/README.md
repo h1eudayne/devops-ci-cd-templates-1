@@ -93,8 +93,12 @@ kubectl apply -f ecommerce-backend-deployment.yml
 ```
 templates/kubernetes/
 ├── secret/
-│   ├── harbor-registry-auth.yml.example             <- Lệnh tạo Secret (file này)
-│   └── ecommerce-backend-database-connection.yml    <- Secret database
+│   ├── harbor/
+│   │   ├── README.md                                    <- Hướng dẫn (file này)
+│   │   └── harbor-registry-auth.yml.example             <- Lệnh tạo Secret Harbor
+│   └── database/
+│       ├── README.md                                    <- Hướng dẫn Secret database
+│       └── ecommerce-backend-database-connection.yml    <- Secret database
 └── deployment/
-    └── ecommerce-backend-deployment.yml.example     <- Deployment tham chiếu cả 2 Secret
+    └── ecommerce-backend-deployment.yml.example          <- Deployment tham chiếu cả 2 Secret
 ```

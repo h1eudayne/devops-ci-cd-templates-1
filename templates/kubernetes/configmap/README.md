@@ -88,9 +88,9 @@ ENTRYPOINT ["java", "-jar", "app.jar", "--spring.config.location=/run/src/main/r
 
 ## Tai lieu lien quan
 
-- Dockerfile backend: [`docker/backend/java/README.md`](../../docker/backend/java/README.md)
-- Fullstack deployment guide: [`docs/k8s/fullstack-deployment-guide.md`](../../../docs/k8s/fullstack-deployment-guide.md)
 - K8s fullstack template: [`kubernetes/full-stack/README.md`](../full-stack/README.md)
+- Secret database: [`kubernetes/secret/database/README.md`](../secret/database/README.md)
+- Deployment example: [`kubernetes/deployment/ecommerce-backend-deployment.yml.example`](../deployment/ecommerce-backend-deployment.yml.example)
 
 ## Luu y
 
