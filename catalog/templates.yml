@@ -189,6 +189,14 @@ kubernetes:
       Template tao Pod Nginx mount PersistentVolumeClaim (PVC)
       su dung NFS Storage.
 
+  - id: k8s-statefulset-mariadb-template
+    kind: StatefulSet
+    file: templates/kubernetes/statefulset/mariadb-statefulset.yml.example
+    maturity: draft
+    notes: >
+      Template tao StatefulSet MariaDB mount PersistentVolumeClaim (PVC)
+      su dung NFS Storage voi fsGroup duoc thiet lap la 65534.
+
   - id: k8s-fullstack-rolling-clusterip-ingress
     kind: Deployment+Service+Ingress
     file: templates/kubernetes/full-stack/fullstack-rolling-clusterip-ingress.yml.example

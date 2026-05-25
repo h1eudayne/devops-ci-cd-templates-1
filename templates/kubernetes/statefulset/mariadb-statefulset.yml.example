@@ -1,0 +1,55 @@
+# =============================================================================
+# Template: Kubernetes StatefulSet (MariaDB with NFS Volume Mount)
+# -----------------------------------------------------------------------------
+# Lưu ý quan trọng:
+#   - StatefulSet phù hợp cho các ứng dụng có trạng thái (Stateful) như cơ sở dữ liệu
+#     như MariaDB/MySQL để đảm bảo định danh mạng và lưu trữ ổn định.
+#   - Cấu hình securityContext.fsGroup: 65534 (nhóm nogroup của NFS Server) cực kỳ
+#     quan trọng để cho phép tiến trình trong container có quyền ghi tệp tin lên
+#     phân vùng NFS đã share với quyền nobody:nogroup mà không bị chặn phân quyền.
+#
+# Hướng dẫn sử dụng:
+#   1. Sao chép file này và đổi tên bỏ đuôi .example:
+#        cp mariadb-statefulset.yml.example mariadb-statefulset.yml
+#   2. Đảm bảo PVC nfs-pvc đã ở trạng thái "Bound" trong namespace ecommerce.
+#   3. Áp dụng cấu hình:
+#        kubectl apply -f mariadb-statefulset.yml
+#   4. Kiểm tra trạng thái:
+#        kubectl get statefulset -n ecommerce
+#        kubectl get pods -l app=mariadb -n ecommerce
+# =============================================================================
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mariadb
+  namespace: ecommerce
+spec:
+  serviceName: mariadb-service
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mariadb
+  template:
+    metadata:
+      labels:
+        app: mariadb
+    spec:
+      securityContext:
+        fsGroup: 65534 # Trùng với GID nogroup của NFS Server để ghi/đọc dữ liệu
+      containers:
+        - name: mariadb
+          image: mariadb:latest
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: "devopseduvn" # CHÚ Ý: Đổi mật khẩu mạnh hơn khi chạy production
+          ports:
+            - containerPort: 3306
+              name: mysql
+          volumeMounts:
+            - name: mariadb-storage
+              mountPath: /var/lib/mysql # Thư mục lưu trữ dữ liệu của MariaDB
+      volumes:
+        - name: mariadb-storage
+          persistentVolumeClaim:
+            claimName: nfs-pvc # Trỏ chính xác tới PVC nfs-pvc
