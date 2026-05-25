@@ -165,6 +165,15 @@ shared:
       Huong dan toan dien ve kien truc, luu do hoat dong va cac buoc trien khai
       NFS Server, Client, PV, PVC va Pod Mount tren Kubernetes.
 
+  - id: shared-k8s-db-nfs-setup-guide
+    category: kubernetes
+    platform: ubuntu
+    file: setup/setup-db-nfs-guide.md
+    maturity: draft
+    notes: >
+      Huong dan tung buoc trien khai database MariaDB tren K8s, bao gom
+      cau hinh NFS Server, StatefulSet va Service NodePort.
+
 kubernetes:
   - id: k8s-namespace-template
     kind: Namespace
