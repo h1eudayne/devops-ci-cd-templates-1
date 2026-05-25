@@ -154,4 +154,13 @@ kubernetes:
       Template cau hinh HorizontalPodAutoscaler (HPA) theo API autoscaling/v2,
       tu dong co gian so pod dua tren nguong tai nguyen CPU va Memory.
 
+  - id: k8s-storageclass-nfs-template
+    kind: StorageClass
+    file: templates/kubernetes/storage/storageclass.yml.example
+    maturity: draft
+    notes: >
+      Template cau hinh StorageClass su dung provisioner kubernetes.io/no-provisioner
+      cho NFS hoac local storage voi volumeBindingMode WaitForFirstConsumer.
+
+
 

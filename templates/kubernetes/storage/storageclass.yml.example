@@ -1,0 +1,32 @@
+# =============================================================================
+# Template: Kubernetes StorageClass (NFS Storage)
+# -----------------------------------------------------------------------------
+# Lưu ý quan trọng:
+#   - StorageClass là TÀI NGUYÊN TOÀN CỤC (Cluster-scoped resource), không thuộc
+#     về bất kỳ namespace nào (không cấu hình trường metadata.namespace).
+#   - Đây là giải pháp cho môi trường ON-PREMISE: sử dụng tùy chọn
+#     provisioner: kubernetes.io/no-provisioner (cơ chế manual provisioning)
+#     cho NFS hoặc local storage. Bạn bắt buộc phải tạo PersistentVolume (PV) thủ công.
+#   - Khác biệt với CLOUD: Trên các nền tảng đám mây (AWS, GCP, Azure...), bạn chỉ cần
+#     khai báo đúng provisioner của nhà cung cấp (ví dụ: ebs.csi.aws.com), khi tạo PVC
+#     thì tài nguyên ổ đĩa và PV vật lý sẽ tự động được cấp phát (dynamic provisioning).
+#
+# Hướng dẫn:
+#   1. Bạn có thể tự do tạo thêm thư mục lưu trữ riêng biệt hoặc đổi tên file tùy ý.
+#   2. Copy file này và đổi tên bỏ đuôi .example
+#   3. Apply:
+#      kubectl apply -f storageclass.yml
+#   4. Kiểm tra:
+#      kubectl get sc
+#
+# Lưu ý:
+#   - volumeBindingMode: WaitForFirstConsumer đảm bảo PV/PVC chỉ bind khi có Pod
+#     thực sự sử dụng và được lên lịch (scheduled) thành công trên node hợp lệ.
+# =============================================================================
+
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: nfs-storage
+provisioner: kubernetes.io/no-provisioner
+volumeBindingMode: WaitForFirstConsumer
