@@ -1,6 +1,6 @@
 # Hướng dẫn Cấu hình và Triển khai Cơ sở dữ liệu MariaDB trên Kubernetes sử dụng NFS Storage
 
-Tài liệu này hướng dẫn chi tiết quy trình triển khai cơ sở dữ liệu **MariaDB** trên cụm Kubernetes, tích hợp lưu trữ chia sẻ **NFS** và công khai cổng truy cập qua **Service NodePort**.
+Tài liệu này hướng dẫn chi tiết quy trình triển khai cơ sở dữ liệu **MariaDB** trên cụm Kubernetes, tích hợp lưu trữ chia sẻ **NFS** và cấu hình Service truy cập (ClusterIP nội bộ bảo mật hoặc NodePort mở cổng bên ngoài).
 
 ---
 
