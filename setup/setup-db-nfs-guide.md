@@ -93,9 +93,12 @@ spec:
 
 ---
 
-### Bước 3: Triển khai Service NodePort MariaDB
-Để các ứng dụng bên ngoài hoặc công cụ quản trị (DBeaver, Navicat) có thể kết nối trực tiếp đến cơ sở dữ liệu, ta expose cổng dịch vụ thông qua `NodePort` cố định `31306`:
+### Bước 3: Triển khai Service Expose MariaDB (2 Cách)
 
+Để ứng dụng kết nối được đến cơ sở dữ liệu MariaDB, ta có 2 phương pháp cấu hình Service tùy theo nhu cầu bảo mật và môi trường:
+
+#### CÁCH 1: Sử dụng ClusterIP (KHUYẾN NGHỊ CHO PRODUCTION)
+- **Mô tả:** Chỉ cho phép truy cập nội bộ trong cụm K8s. Các ứng dụng khác (như Backend) kết nối tới MariaDB cực kỳ an toàn qua DNS nội bộ của Service mà không lo bị lộ cổng ra ngoài Internet.
 - **Tệp cấu hình:** [mariadb-service.yml.example](../templates/kubernetes/service/mariadb-service.yml.example)
 ```yaml
 apiVersion: v1
@@ -105,17 +108,35 @@ metadata:
   namespace: ecommerce
 spec:
   selector:
-    app: mariadb
-  type: NodePort
+    app: mariadb # Ánh xạ tới StatefulSet MariaDB
+  type: ClusterIP # Chỉ truy cập nội bộ trong cụm
   ports:
     - port: 3306      # Cổng giao tiếp của Service trong cụm
       targetPort: 3306 # Cổng container MariaDB lắng nghe
-      nodePort: 31306  # Cổng vật lý expose ra trên các Node K8s (30000-32767)
+```
+*DNS kết nối nội bộ:* `mariadb-service.ecommerce.svc.cluster.local:3306`
+
+#### CÁCH 2: Sử dụng NodePort (PHÙ HỢP CHO LIÊN KẾT NGOÀI & TEST)
+- **Mô tả:** Mở cổng vật lý `31306` trên tất cả các node trong cụm Kubernetes. Giúp DevOps/Developer kết nối trực tiếp đến cơ sở dữ liệu bằng các công cụ bên ngoài (DBeaver, Navicat, CLI) để quản trị và kiểm thử.
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: mariadb-service
+  namespace: ecommerce
+spec:
+  selector:
+    app: mariadb
+  type: NodePort # Cho phép truy cập từ bên ngoài qua IP của Node
+  ports:
+    - port: 3306      
+      targetPort: 3306 
+      nodePort: 31306  # Cổng vật lý expose trên các Node K8s (30000-32767)
 ```
 
 ---
 
-## 3. Liên kết luồng kiến trúc lưu trữ
+## 3. Liên kết luồng kiến trúc lưu trữ và dịch vụ
 
 Hệ thống hoạt động dựa trên các thành phần đã thiết lập trước đó theo luồng kết nối tuần tự:
 
@@ -130,9 +151,13 @@ Hệ thống hoạt động dựa trên các thành phần đã thiết lập tr
                                                                         ▼
                                                              [StatefulSet: mariadb-0]
                                                                         ▲
-                                                                        │ (Expose Port)
-                                                                        ▼
-                                                             [Service NodePort: 31306]
+                                                 ┌──────────────────────┴──────────────────────┐
+                                                 │                                             │
+                                                 ▼ (Cách 1 - ClusterIP)                        ▼ (Cách 2 - NodePort)
+                                     [mariadb-service: 3306]                        [mariadb-service: 31306]
+                                                 │                                             │
+                                                 ▼ (Nội bộ K8s)                                ▼ (Internet / Bên ngoài)
+                                      [Backend App / Web Pod]                       [Navicat / DBeaver / DevOps]
 ```
 
 ## 4. Các lệnh kiểm tra vận hành nhanh
@@ -146,12 +171,20 @@ kubectl get pods -l app=mariadb -n ecommerce -o wide
 kubectl logs statefulset/mariadb -n ecommerce
 ```
 
-### 2. Kiểm tra kết nối cơ sở dữ liệu từ bên ngoài:
-Từ máy tính của bạn hoặc một máy khách bên ngoài mạng Kubernetes, thử kết nối tới cổng `31306` của bất kỳ Node K8s nào:
-```bash
-mysql -h <K8S_NODE_IP> -P 31306 -u root -pdevopseduvn
-```
-hoặc kiểm tra cổng mở nhanh bằng:
-```bash
-nc -zv <K8S_NODE_IP> 31306
-```
+### 2. Kiểm tra kết nối cơ sở dữ liệu:
+
+- **Nếu dùng Cách 1 (ClusterIP) - Test từ một Pod tạm thời bên trong cụm K8s:**
+  ```bash
+  # Khởi chạy một pod temporary chạy mysql-client để kết nối thử
+  kubectl run mysql-client --rm -i --tty --image=mariadb --namespace=ecommerce -- mysql -h mariadb-service -u root -pdevopseduvn
+  ```
+
+- **Nếu dùng Cách 2 (NodePort) - Kết nối từ bên ngoài mạng Kubernetes:**
+  Thử kết nối tới cổng `31306` của bất kỳ Node K8s nào:
+  ```bash
+  mysql -h <K8S_NODE_IP> -P 31306 -u root -pdevopseduvn
+  ```
+  hoặc kiểm tra cổng mở nhanh bằng:
+  ```bash
+  nc -zv <K8S_NODE_IP> 31306
+  ```

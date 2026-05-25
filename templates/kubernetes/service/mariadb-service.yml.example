@@ -1,26 +1,24 @@
 # =============================================================================
-# Template: Kubernetes Service NodePort (MariaDB Service)
+# Template: Kubernetes Service for MariaDB (ClusterIP & NodePort Options)
 # -----------------------------------------------------------------------------
 # Lưu ý quan trọng:
-#   - Service này có tên mariadb-service, khớp với serviceName cấu hình trong
-#     StatefulSet MariaDB.
-#   - Kiểu NodePort cho phép bạn truy cập cơ sở dữ liệu MariaDB từ bên ngoài
-#     cụm Kubernetes thông qua địa chỉ IP của bất kỳ Node nào và cổng vật lý
-#     31306 (nằm trong dải cổng NodePort mặc định 30000-32767).
+#   - Tên Service bắt buộc phải là: mariadb-service (khớp với serviceName cấu hình trong StatefulSet).
+#   - Hướng dẫn này cung cấp 2 CÁCH CẤU HÌNH tương ứng với 2 nhu cầu khác nhau.
 #
-# Hướng dẫn sử dụng:
-#   1. Sao chép file này và đổi tên bỏ đuôi .example:
-#        cp mariadb-service.yml.example mariadb-service.yml
-#   2. Cấu hình đúng namespace (mặc định: ecommerce).
-#   3. Áp dụng cấu hình:
-#        kubectl apply -f mariadb-service.yml
-#   4. Kiểm tra trạng thái:
-#        kubectl get svc -n ecommerce
-#        kubectl get endpoints mariadb-service -n ecommerce
-#   5. Kết nối thử từ máy khách bên ngoài (sử dụng DBeaver, Navicat hoặc mysql-client):
-#        mysql -h <NODE_IP> -P 31306 -u root -p
+# CÁCH 1: ClusterIP (KHUYẾN NGHỊ CHO PRODUCTION)
+#   - Chỉ cho phép truy cập nội bộ trong cụm K8s. Các ứng dụng khác (như Backend)
+#     sẽ kết nối tới MariaDB an toàn qua DNS nội bộ: mariadb-service.ecommerce.svc.cluster.local
+#   - Đây là mô hình bảo mật chuẩn, tránh để lộ Database ra môi trường bên ngoài.
+#
+# CÁCH 2: NodePort (PHÙ HỢP CHO LIÊN KẾT NGOÀI & TEST)
+#   - Mở cổng vật lý 31306 trên tất cả các node trong cụm Kubernetes.
+#   - Giúp DevOps/Developer kết nối trực tiếp đến Database bằng các công cụ bên ngoài
+#     (DBeaver, Navicat, CLI) thông qua <NODE_IP>:31306.
 # =============================================================================
 
+# -----------------------------------------------------------------------------
+# CẤU HÌNH CÁCH 1: ClusterIP (Mặc định hoạt động)
+# -----------------------------------------------------------------------------
 apiVersion: v1
 kind: Service
 metadata:
@@ -28,9 +26,26 @@ metadata:
   namespace: ecommerce
 spec:
   selector:
-    app: mariadb # Khớp với nhãn (label) app: mariadb của Pod MariaDB
-  type: NodePort
+    app: mariadb # Ánh xạ tới Pod MariaDB của StatefulSet
+  type: ClusterIP # Chỉ truy cập nội bộ
   ports:
-    - port: 3306      # Cổng nội bộ của Service trong cluster
-      targetPort: 3306 # Cổng thực tế của container MariaDB
-      nodePort: 31306  # Cổng vật lý trên mỗi node để truy cập từ ngoài
+    - port: 3306      # Cổng của Service
+      targetPort: 3306 # Cổng của container MariaDB
+
+# -----------------------------------------------------------------------------
+# CẤU HÌNH CÁCH 2: NodePort (Nếu muốn dùng, hãy BỎ COMMENT khối dưới và XÓA khối trên)
+# -----------------------------------------------------------------------------
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: mariadb-service
+#   namespace: ecommerce
+# spec:
+#   selector:
+#     app: mariadb
+#   type: NodePort # Cho phép truy cập từ ngoài qua IP Node
+#   ports:
+#     - port: 3306
+#       targetPort: 3306
+#       nodePort: 31306 # Cổng vật lý trên mỗi node (phải trong dải 30000-32767)
+
