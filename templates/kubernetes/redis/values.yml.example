@@ -1,0 +1,38 @@
+# =============================================================================
+# Template: Helm Values Configuration for Bitnami Redis Chart
+# -----------------------------------------------------------------------------
+# Lưu ý quan trọng:
+#   - Cấu hình này thiết lập Redis ở chế độ Replication (Master-Replica) đi kèm Sentinel.
+#   - Sử dụng PersistentVolumeClaim đã tạo sẵn (`redis-pvc`) trong namespace `architecture`.
+#   - Hỗ trợ cơ chế tự động chuyển vùng (Failover) thông qua Redis Sentinel.
+#
+# Hướng dẫn sử dụng:
+#   1. Đảm bảo PVC `redis-pvc` trong namespace `architecture` đã ở trạng thái Bound.
+#   2. Sao chép file này và đổi tên bỏ đuôi .example:
+#        cp values.yml.example values.yaml
+#   3. Triển khai bằng Helm:
+#        helm install redis bitnami/redis -f values.yaml -n architecture
+# =============================================================================
+
+architecture: replication
+
+auth:
+  enabled: true
+  password: "devopseduvn"
+
+master:
+  persistence:
+    enabled: true
+    existingClaim: redis-pvc
+    size: 3Gi
+
+replica:
+  replicaCount: 3
+  persistence:
+    enabled: true
+    existingClaim: redis-pvc
+    size: 3Gi
+
+sentinel:
+  enabled: true
+  replicas: 3

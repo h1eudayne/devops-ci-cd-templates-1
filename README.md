@@ -114,6 +114,9 @@ Repository nay dung de luu va tai su dung cac file CI/CD da duoc chuan hoa cho n
 |       |-- hpa/
 |       |   |-- README.md
 |       |   `-- hpa.yml.example
+|       |-- redis/
+|       |   |-- README.md
+|       |   `-- values.yml.example
 |       |-- storage/
 |       |   |-- README.md
 |       |   |-- pv.yml.example
@@ -214,6 +217,8 @@ Tai nguyen dung chung nhu config Nginx, Dockerfile mau, shell snippet, hoac file
 | Kubernetes | Storage | Template PersistentVolume (PV) thu cong su dung NFS Storage cho moi truong on-premise | `templates/kubernetes/storage/pv.yml.example` |
 | Kubernetes | Storage | Template PersistentVolumeClaim (PVC) su dung NFS Storage cho cac ung dung | `templates/kubernetes/storage/pvc.yml.example` |
 | Kubernetes | Storage | Template PV va PVC su dung NFS Storage cho Redis trong namespace architecture | `templates/kubernetes/storage/redis-pv-pvc.yml.example` |
+| Kubernetes | Redis | Template values.yaml de cai dat Redis Replication + Sentinel bang Helm | `templates/kubernetes/redis/values.yml.example` |
+| Kubernetes | Redis | Huong dan trien khai Redis Cluster (Replication + Sentinel) bang Helm | `templates/kubernetes/redis/README.md` |
 
 
 ## Goi y mo rong tiep theo
