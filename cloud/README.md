@@ -1,71 +1,46 @@
-# Cloud Provider Templates
+# Cloud Templates
 
-Thu muc nay duoc chuan bi de chua cac template lien quan den cloud provider. Muc tieu la cung cap cac file IaC (Infrastructure as Code), cau hinh managed Kubernetes, va tich hop CI/CD tren cloud de cac team co the tai su dung nhanh chong.
+Thu muc nay chua cac tai nguyen DevOps cho cac nha cung cap Cloud (AWS, GCP, Azure).
 
-## Noi dung du kien
-
-- **IaC (Infrastructure as Code)**: Terraform modules, CloudFormation stacks, Pulumi programs de khoi tao ha tang tren cloud.
-- **Managed Kubernetes**: Cau hinh cho EKS (AWS), GKE (GCP), AKS (Azure) — bao gom cluster setup, node pool, autoscaling, va RBAC.
-- **Cloud CI/CD Integrations**: Template cho AWS CodePipeline, GCP Cloud Build, Azure DevOps Pipelines va cac dich vu tuong tu.
-- **Container Registry**: Cau hinh ECR (AWS), Artifact Registry (GCP), ACR (Azure).
-- **Managed Database**: Template cho RDS, Cloud SQL, Azure SQL, bao gom backup va networking.
-- **IAM & Security**: Cau hinh role, policy, service account cho tung cloud provider.
-
-## Cau truc khuyen nghi
+## Cau truc
 
 ```text
 cloud/
-  aws/
-    terraform/
-      eks/
-      ecr/
-      rds/
-      iam/
-      vpc/
-    cloudformation/
-    codepipeline/
-  gcp/
-    terraform/
-      gke/
-      cloud-run/
-      cloud-sql/
-      artifact-registry/
-    cloud-build/
-  azure/
-    terraform/
-      aks/
-      acr/
-      azure-sql/
-    azure-devops/
+├── aws/
+│   ├── services/        # 📖 Dich vu AWS la gi + huong dan
+│   ├── pipelines/       # 🚀 Pipeline deploy len AWS
+│   └── README.md
+├── gcp/
+│   ├── services/        # 📖 Dich vu GCP la gi + huong dan
+│   ├── pipelines/       # 🚀 Pipeline deploy len GCP
+│   └── README.md
+├── azure/
+│   ├── services/        # 📖 Dich vu Azure la gi + huong dan
+│   ├── pipelines/       # 🚀 Pipeline deploy len Azure
+│   └── README.md
+└── README.md            # (file nay)
 ```
 
-## Quy tac dat ten
+## Giai thich 2 folder con
 
-Tuong tu nhu phan on-premise, moi template nen co ten mo ta ro:
-
-- Tool hoac service: `eks`, `gke`, `aks`, `rds`, `cloud-sql`
-- Kieu cau hinh: `cluster`, `node-pool`, `vpc`, `iam-role`
-- Bien the hoac kich ban: `single-az`, `multi-az`, `ha`, `spot`
-
-Vi du: `eks-cluster-multi-az.tf`, `gke-autopilot-standard.tf`
-
-## Khac biet so voi on-premise
-
-| Tieu chi | On-Premise | Cloud |
+| Folder | Mo ta | Khi nao vao? |
 | --- | --- | --- |
-| Ha tang | Tu quan ly server vat ly, VM, mang noi bo | Cloud provider quan ly (IaaS/PaaS) |
-| Kubernetes | Cai dat thu cong bang kubeadm, Rancher | Managed K8s: EKS, GKE, AKS |
-| Container Registry | Harbor, Private Registry TLS | ECR, Artifact Registry, ACR |
-| Load Balancer | Nginx reverse proxy, NodePort | Cloud LB (ALB, NLB, Cloud Load Balancing) |
-| Storage | NFS Server tu cai dat | EBS, EFS, Cloud Filestore, Azure Disk |
-| CI/CD | Jenkins, GitLab Runner tu host | CodePipeline, Cloud Build, Azure Pipelines |
-| Networking | Cau hinh manual firewall, iptables | VPC, Security Group, Firewall Rules |
-| Scaling | HPA + them node thu cong | HPA + Cluster Autoscaler / Node Auto-provisioning |
+| `services/` | Gioi thieu tung dich vu cloud: no la gi, khi nao dung, cach bat dau | Nguoi moi muon hieu dich vu cloud |
+| `pipelines/` | File pipeline CI/CD thuc te de deploy ung dung len cloud | Can file .yml copy ra dung ngay |
 
-## Cach them template moi
+## So sanh voi on-premise
 
-1. Chon dung cloud provider (`aws/`, `gcp/`, `azure/`).
-2. Phan loai theo tool IaC (terraform, cloudformation) hoac dich vu (codepipeline, cloud-build).
-3. Dat ten file mo ta ro service, kieu cau hinh va bien the.
-4. Them README trong thu muc template de giai thich cach su dung, bien can thay doi, va cac buoc tien quyet.
-5. Khong commit secret, access key, account ID cu the, hoac thong tin nay cam.
+| | On-Premise | Cloud |
+| --- | --- | --- |
+| Kubernetes | Tu cai K8s (kubeadm) | Managed: EKS / GKE / AKS |
+| Registry | Harbor / Private Registry | ECR / Artifact Registry / ACR |
+| Database | Tu cai MariaDB / MySQL | RDS / Cloud SQL / Azure SQL |
+| Storage | NFS Server | S3 / GCS / Blob Storage |
+| Load Balancer | Nginx reverse proxy | Cloud Load Balancer |
+| CI/CD | GitLab CI / Jenkins (self-hosted) | CodePipeline / Cloud Build / Azure DevOps |
+
+## Luu y chung
+
+- **Khong commit** secret, access key, service account key, hoac bat ky thong tin xac thuc nao.
+- Su dung **bien moi truong** hoac **secret manager** cho cac gia tri nhay cam.
+- Uu tien **IAM Role / Workload Identity / Managed Identity** thay vi static key.
