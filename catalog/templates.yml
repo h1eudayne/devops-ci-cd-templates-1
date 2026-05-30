@@ -191,6 +191,32 @@ shared:
       Huong dan tung buoc trien khai Redis Sentinel HA tren K8s, bao gom
       cau hinh NFS Server, PV/PVC, Helm values va kiem tra ket noi qua ClusterIP.
 
+  - id: shared-k8s-uptime-kuma-setup-script
+    category: kubernetes
+    platform: ubuntu
+    file: on-premise/kubernetes/uptime-kuma/setup-uptime-kuma.sh.example
+    maturity: draft
+    notes: >
+      Bash script tu dong trien khai Uptime Kuma tren Kubernetes tu Namespace,
+      PV/PVC, Helm values va Ingress.
+
+  - id: shared-k8s-uptime-kuma-setup-guide
+    category: kubernetes
+    platform: ubuntu
+    file: on-premise/setup/monitoring/setup-uptime-kuma-guide.md
+    maturity: draft
+    notes: >
+      Huong dan tung buoc trien khai Uptime Kuma tren K8s, bao gom
+      cau hinh NFS Server, PV/PVC, Helm values, Ingress va sua loi DNS Host Aliases.
+
+  - id: shared-k8s-kube-prometheus-setup-guide
+    category: kubernetes
+    platform: ubuntu
+    file: on-premise/setup/monitoring/setup-kube-prometheus-guide.md
+    maturity: draft
+    notes: >
+      Huong dan chi tiet trien khai kube-prometheus-stack tren Kubernetes su dung Helm chart.
+
 kubernetes:
   - id: k8s-namespace-template
     kind: Namespace
@@ -281,6 +307,14 @@ kubernetes:
       Template cau hinh PersistentVolume (PV) va PersistentVolumeClaim (PVC)
       su dung NFS Storage cho ung dung Redis trong namespace architecture.
 
+  - id: k8s-uptime-kuma-pv-pvc-template
+    kind: PersistentVolume+PersistentVolumeClaim
+    file: on-premise/kubernetes/storage/uptime-kuma-pv-pvc.yml.example
+    maturity: draft
+    notes: >
+      Template cau hinh PersistentVolume (PV) va PersistentVolumeClaim (PVC)
+      su dung NFS Storage cho ung dung Uptime Kuma trong namespace monitoring.
+
   - id: k8s-redis-helm-values-template
     kind: HelmValues
     file: on-premise/kubernetes/redis/values.yml.example
@@ -288,6 +322,23 @@ kubernetes:
     notes: >
       Template cau hinh values.yaml de cai dat Redis Replication + Sentinel
       su dung Helm Chart Bitnami tren Kubernetes.
+
+  - id: k8s-uptime-kuma-helm-values-template
+    kind: HelmValues
+    file: on-premise/kubernetes/uptime-kuma/values.yml.example
+    maturity: draft
+    notes: >
+      Template cau hinh values.yaml de cai dat Uptime Kuma su dung existingClaim PVC.
+
+  - id: k8s-uptime-kuma-ingress-template
+    kind: Ingress
+    file: on-premise/kubernetes/uptime-kuma/ingress.yml.example
+    maturity: draft
+    notes: >
+      Template cau hinh Ingress cho Uptime Kuma truy cap qua ten mien uptime.devops.hieuduyne.tech.
+
+
+
 
 
 

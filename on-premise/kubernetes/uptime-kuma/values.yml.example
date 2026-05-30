@@ -1,0 +1,22 @@
+# =============================================================================
+# Template: Helm Values Configuration for Uptime Kuma Chart
+# -----------------------------------------------------------------------------
+# Lưu ý quan trọng:
+#   - Cấu hình này thiết lập Uptime Kuma để lưu trữ dữ liệu bền vững.
+#   - Sử dụng PersistentVolumeClaim đã tạo sẵn (`uptime-kuma-pvc`) trong namespace `monitoring`.
+#
+# Hướng dẫn sử dụng:
+#   1. Đảm bảo PVC `uptime-kuma-pvc` trong namespace `monitoring` đã ở trạng thái Bound.
+#   2. Sao chép file này và đổi tên bỏ đuôi .example:
+#        cp values.yml.example values.yaml
+#   3. Thêm Helm repository:
+#        helm repo add uptime-kuma https://dirsigler.github.io/uptime-kuma-helm
+#        helm repo update
+#   4. Triển khai bằng Helm:
+#        helm install uptime-kuma uptime-kuma/uptime-kuma --values values.yaml --namespace monitoring
+# =============================================================================
+
+volume:
+  enabled: true
+  accessMode: ReadWriteOnce
+  existingClaim: "uptime-kuma-pvc"

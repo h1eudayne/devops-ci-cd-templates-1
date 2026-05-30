@@ -1,0 +1,32 @@
+# ==============================================================================
+# Cấu hình Ingress cho Uptime Kuma (on-premise)
+# Sử dụng Ingress Nginx Controller trong namespace: monitoring
+# ==============================================================================
+#
+# Hướng dẫn sử dụng:
+#   1. Sao chép file này và đổi tên bỏ đuôi .example:
+#        cp ingress.yml.example ingress.yml
+#   2. Áp dụng cấu hình:
+#        kubectl apply -f ingress.yml
+#   3. Kiểm tra trạng thái:
+#        kubectl get ingress -n monitoring
+# ==============================================================================
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: uptime-ingress
+  namespace: monitoring
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: uptime.devops.hieuduyne.tech
+      http:
+        paths:
+          - backend:
+              service:
+                name: uptime-kuma
+                port:
+                  number: 3001 # Cổng mặc định của Uptime Kuma Service trong Helm Chart
+            path: /
+            pathType: Prefix

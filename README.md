@@ -142,6 +142,7 @@ Phan `scenario` nen mo ta du 4 y:
 | Service | service-nodeport | Service kieu NodePort | `service/service-nodeport.yml.example` |
 | Service | mariadb-service | Service cho MariaDB | `service/mariadb-service.yml.example` |
 | Ingress | ingress-car-serv | Ingress Nginx cho du an car-serv (domain h1eudayne.tech) | `ingress/ingress-car-serv.yml.example` |
+| Ingress | uptime-ingress | Ingress cho Uptime Kuma (domain uptime.devops.hieuduyne.tech) | `uptime-kuma/ingress.yml.example` |
 | ConfigMap | configmap-spring | ConfigMap cho Spring Boot properties | `configmap/configmap-spring-properties.yml.example` |
 | Secret | database | Secret cho database connection | `secret/database/ecommerce-backend-database-connection.yml` |
 | Secret | harbor | Secret cho Harbor registry auth | `secret/harbor/harbor-registry-auth.yml.example` |
@@ -150,9 +151,11 @@ Phan `scenario` nen mo ta du 4 y:
 | Storage | pv | PersistentVolume NFS thu cong | `storage/pv.yml.example` |
 | Storage | pvc | PersistentVolumeClaim NFS | `storage/pvc.yml.example` |
 | Storage | redis-pv-pvc | PV va PVC NFS cho Redis | `storage/redis-pv-pvc.yml.example` |
+| Storage | uptime-kuma-pv-pvc | PV va PVC NFS cho Uptime Kuma | `storage/uptime-kuma-pv-pvc.yml.example` |
 | StatefulSet | mariadb | MariaDB StatefulSet | `statefulset/mariadb-statefulset.yml.example` |
 | Resource Limit | deployment-limit | Deployment voi resource request va limit | `resource-limit/deployment-with-resource-limit.yml.example` |
 | Redis | values | Helm values.yaml cho Redis Replication + Sentinel | `redis/values.yml.example` |
+| Uptime Kuma | values | Helm values.yaml cho Uptime Kuma su dung existing PVC | `uptime-kuma/values.yml.example` |
 | Full-Stack | fullstack | Deployment (RollingUpdate) + Service (ClusterIP) + Ingress trong 1 file | `full-stack/fullstack-rolling-clusterip-ingress.yml.example` |
 | Load Balancer | nginx-lb | Nginx config phan phoi traffic den K8s node qua NodePort 30080 | `load-balancer/nginx/k8s-loadbalancer.conf` |
 
@@ -178,6 +181,8 @@ Phan `scenario` nen mo ta du 4 y:
 | MySQL | Huong dan cai dat MySQL Server, tao database va user | `mysql/install-mysql-guide.md` |
 | NFS | Huong dan cai dat va cau hinh NFS Server | `nfs/nfs-server-guide.md` |
 | NFS | Huong dan cai dat NFS Client va kiem tra ket noi | `nfs/nfs-client-guide.md` |
+| Monitoring | Huong dan trien khai Uptime Kuma (PV/PVC, Helm, Ingress, HostAlias) | `monitoring/setup-uptime-kuma-guide.md` |
+| Monitoring | Huong dan trien khai Kube Prometheus Stack (Prometheus + Grafana) | `monitoring/setup-kube-prometheus-guide.md` |
 
 ### 🛠️ On-Premise Scripts
 
@@ -204,6 +209,7 @@ Phan `scenario` nen mo ta du 4 y:
 | Jenkins | Cai dat Jenkins server | `jenkins/install-jenkins.sh.example` |
 | Jenkins | Systemd service file cho Jenkins Agent | `jenkins/jenkins-agent.service.example` |
 | Storage | Mount disk vao he thong | `storage/mount-disk.sh.example` |
+| Uptime Kuma | Script tu dong cai dat Uptime Kuma (Namespace, PV, PVC, Helm, Ingress) | `kubernetes/uptime-kuma/setup-uptime-kuma.sh.example` |
 
 ### 📦 Dockerfile Templates
 

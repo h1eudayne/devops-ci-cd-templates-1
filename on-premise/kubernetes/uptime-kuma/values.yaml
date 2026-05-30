@@ -1,0 +1,4 @@
+volume:
+  enabled: true
+  accessMode: ReadWriteOnce
+  existingClaim: "uptime-kuma-pvc"

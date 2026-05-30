@@ -1,52 +1,42 @@
 # AWS Templates
 
-Thu muc nay se chua cac template IaC va cau hinh lien quan den Amazon Web Services (AWS).
+Thu muc nay chua cac tai nguyen lien quan den Amazon Web Services (AWS) cho DevOps.
 
-## Cac dich vu du kien
-
-### Compute & Container
-
-- **EKS (Elastic Kubernetes Service)**: Cluster setup, node group, Fargate profile, IRSA (IAM Roles for Service Accounts).
-- **ECS (Elastic Container Service)**: Task definition, service, Fargate launch type.
-- **ECR (Elastic Container Registry)**: Repository, lifecycle policy, image scanning.
-
-### Database & Storage
-
-- **RDS (Relational Database Service)**: Instance, subnet group, parameter group, automated backup.
-- **S3 (Simple Storage Service)**: Bucket, policy, lifecycle rule, static website hosting.
-- **EFS (Elastic File System)**: File system, mount target, access point.
-
-### Networking & Security
-
-- **VPC**: Subnet, route table, NAT gateway, internet gateway.
-- **Security Group**: Ingress/egress rule cho tung dich vu.
-- **IAM**: Role, policy, user, group, service-linked role.
-- **ACM (Certificate Manager)**: TLS certificate cho domain.
-
-### CI/CD
-
-- **CodePipeline**: Pipeline, stage, action — tich hop voi CodeBuild va CodeDeploy.
-- **CodeBuild**: Build project, buildspec.yml template.
-- **CodeDeploy**: Deployment group, appspec.yml template.
-
-## Cau truc khuyen nghi
+## Cau truc
 
 ```text
 aws/
-  terraform/
-    eks/
-    ecr/
-    ecs/
-    rds/
-    s3/
-    vpc/
-    iam/
-  cloudformation/
-  codepipeline/
+├── services/        # 📖 Gioi thieu cac dich vu AWS + huong dan su dung
+│   └── README.md
+├── deploy/          # 🚀 Cau hinh deploy len AWS
+│   └── README.md
+└── README.md        # (file nay)
 ```
+
+| Folder | Mo ta | Khi nao vao? |
+| --- | --- | --- |
+| `services/` | Giai thich tung dich vu AWS la gi, khi nao dung, cach bat dau | "Toi chua biet EKS/ECS/ECR la gi" |
+| `deploy/` | Cau hinh va huong dan deploy ung dung len AWS | "Toi can file config deploy len EKS/ECR" |
+
+## Cac dich vu AWS chinh
+
+| Nhom | Dich vu | Mo ta ngan |
+| --- | --- | --- |
+| Compute | EKS | Managed Kubernetes |
+| Compute | ECS | Container orchestration |
+| Registry | ECR | Docker image registry |
+| Database | RDS | Managed relational database |
+| Storage | S3 | Object storage |
+| Storage | EFS | Shared file system |
+| Network | VPC | Virtual private network |
+| Security | IAM | Identity & access management |
+| TLS | ACM | Certificate manager |
+| CI/CD | CodePipeline | Native AWS CI/CD |
+| DNS | Route 53 | Domain name service |
+| CDN | CloudFront | Content delivery network |
 
 ## Luu y
 
-- Tat ca template nen su dung bien (variable) cho region, account ID, ten resource de co the tai su dung cho nhieu project.
 - Khong commit AWS Access Key, Secret Key, hoac bat ky thong tin xac thuc nao.
-- Uu tien su dung Terraform module de tai su dung va chia se giua cac team.
+- Uu tien su dung Terraform module hoac CloudFormation de tai su dung.
+- Tat ca template nen su dung bien (variable) cho region, account ID, ten resource.
