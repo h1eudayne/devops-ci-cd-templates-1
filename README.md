@@ -174,6 +174,8 @@ Phan `scenario` nen mo ta du 4 y:
 | Kubernetes | Huong dan cai dat Metrics Server tren K8s | `kubernetes/metrics-server-guide.md` |
 | Kubernetes | Huong dan cai dat Helm (K8s Package Manager) | `kubernetes/install-helm-guide.md` |
 | Kubernetes | Huong dan cai dat Ingress Nginx Controller | `kubernetes/install-ingress-nginx-guide.md` |
+| Kubernetes | Huong dan cai dat Velero CLI Client | `kubernetes/install-velero-client-guide.md` |
+| Kubernetes | Huong dan cau hinh Velero sao luu k8s ket hop MinIO | `kubernetes/setup-velero-minio-backup.md` |
 | Jenkins | Huong dan cai dat Jenkins tren Ubuntu | `jenkins/install-jenkins-guide.md` |
 | Jenkins | Huong dan cau hinh Nginx reverse proxy cho Jenkins | `jenkins/reverse-proxy-guide.md` |
 | Harbor | Huong dan cai dat Harbor (container registry) | `harbor/install-harbor-guide.md` |
@@ -183,6 +185,26 @@ Phan `scenario` nen mo ta du 4 y:
 | NFS | Huong dan cai dat NFS Client va kiem tra ket noi | `nfs/nfs-client-guide.md` |
 | Monitoring | Huong dan trien khai Uptime Kuma (PV/PVC, Helm, Ingress, HostAlias) | `monitoring/setup-uptime-kuma-guide.md` |
 | Monitoring | Huong dan trien khai Kube Prometheus Stack (Prometheus + Grafana) | `monitoring/setup-kube-prometheus-guide.md` |
+
+### Cloud Infrastructure & Deployment Guides (AWS)
+
+> Cac tai lieu kien thuc va lab thuc hanh nam trong `cloud/aws/`
+
+| Nhom | Loai | Mo ta | File |
+| --- | --- | --- | --- |
+| EC2 | Ly thuyet | So sanh EC2 voi PC/Laptop vat ly, AMI, EBS, Instance Type | `cloud/aws/services/1. EC2/1. Amazon EC2.md` |
+| EC2 | Ly thuyet | Vong doi EC2 (EBS & Instance Store-backed) va cach tinh phi | `cloud/aws/services/1. EC2/2. Amazon EC2 Lifecycle.md` |
+| EC2 | Ly thuyet | Tuong lua ao Security Group, co che Stateful | `cloud/aws/services/1. EC2/3. Amazon EC2 Security Group.md` |
+| EC2 | Ly thuyet | Cau hinh User Data tu dong hoa va Metadata IMDSv2 | `cloud/aws/services/1. EC2/6. Amazon EC2 User Data and Metadata.md` |
+| EC2 | Ly thuyet | Cac truong hop su dung pho bien (Lift & Shift, K8s Workers, DB) | `cloud/aws/services/1. EC2/8. Amazon EC2 Use Cases.md` |
+| Storage | Ly thuyet | Chi tiet EBS block storage va 5 phan loai volume | `cloud/aws/services/1. EC2/9. Amazon EBS.md` |
+| EC2 | Thuc hanh | Tao instance Linux, SSH, cai Apache, Snapshot va AMI | `cloud/aws/deploy/1. Amazon EC2 Hands-on Lab(Linux).md` |
+| EC2 | Thuc hanh | Tao Windows instance, RDP port 3389, giai ma mat khau Admin | `cloud/aws/deploy/2. Amazon EC2 Hands-on Lab(Windows).md` |
+| EC2 | Thuc hanh | Tu dong hoa cai Apache qua User Data va lay IP qua IMDSv2 | `cloud/aws/deploy/3. Amazon EC2 User Data and Metadata Lab.md` |
+| Storage | Thuc hanh | Tao, gan va online/format EBS volume tren Windows Server | `cloud/aws/deploy/4. Amazon EC2 Hands-on Lab(Windows Volume).md` |
+| Storage | Thuc hanh | Tao, gan, XFS format, auto-mount fstab, extend volume online tren Linux | `cloud/aws/deploy/5. Amazon EC2 Hands-on Lab(Linux Volume).md` |
+| Security | Thuc hanh | Tao user dev01, cau hinh chmod .ssh (700) va authorized_keys (600) | `cloud/aws/deploy/6. Amazon EC2 Hands-on Lab(Add Member SSH).md` |
+
 
 ### On-Premise Scripts
 
@@ -234,6 +256,9 @@ Phan `scenario` nen mo ta du 4 y:
 | Backend + MariaDB | Docker Compose stack cho backend image + MariaDB voi bien moi truong | `backend-mariadb/docker-compose.yml.example` |
 | Private Registry | Private registry voi TLS self-signed certificate | `private-registry-tls/docker-compose.yml.example` |
 | Rancher | Docker Compose stack cho Rancher | `rancher/docker-compose.yml.example` |
+| MinIO | Docker Compose stack cho MinIO Object Storage | `minio/docker-compose.yml.example` |
+
+
 
 ### Nginx Config Templates
 
