@@ -255,6 +255,9 @@ Phan `scenario` nen mo ta du 4 y:
 | Backend + MariaDB | Docker Compose stack cho backend image + MariaDB voi bien moi truong | `backend-mariadb/docker-compose.yml.example` |
 | Private Registry | Private registry voi TLS self-signed certificate | `private-registry-tls/docker-compose.yml.example` |
 | Rancher | Docker Compose stack cho Rancher | `rancher/docker-compose.yml.example` |
+| MinIO | Docker Compose stack cho MinIO Object Storage | `minio/docker-compose.yml.example` |
+
+
 
 ### Nginx Config Templates
 
