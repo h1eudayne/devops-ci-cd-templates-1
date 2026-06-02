@@ -62,12 +62,20 @@ Cac huong dan thuc hanh deploy ung dung va cau hinh ha tang EC2 tung buoc (step-
 
 | File | Mo ta | Giao thuc / Cong nghe |
 |------|-------|-----------------------|
-| [1. Amazon EC2 Hands-on Lab(Linux)](1.%20Amazon%20EC2%20Hands-on%20Lab%28Linux%29.md) | Khoi tao EC2 Linux, SSH from Windows, cai dat httpd, Snapshot/AMI | SSH, HTTP, Apache |
-| [2. Amazon EC2 Hands-on Lab(Windows)](2.%20Amazon%20EC2%20Hands-on%20Lab%28Windows%29.md) | Khoi tao EC2 Windows Server, giai ma mat khau Administrator, RDP login | RDP, Windows Server |
-| [3. Amazon EC2 User Data and Metadata Lab](3.%20Amazon%20EC2%20User%20Data%20and%20Metadata%20Lab.md) | Tu dong hoa cai dat Web Server va lay IP dong qua IMDSv2 | User Data, IMDSv2, Bash |
-| [4. Amazon EC2 Hands-on Lab(Windows Volume)](4.%20Amazon%20EC2%20Hands-on%20Lab%28Windows%20Volume%29.md) | Tao EBS Volume, attach vao instance, online va format NTFS | EBS, Windows Disk Mgmt |
-| [5. Amazon EC2 Hands-on Lab(Linux Volume)](5.%20Amazon%20EC2%20Hands-on%20Lab%28Linux%20Volume%29.md) | EBS volume, fdisk partition, XFS format, /etc/fstab auto-mount, extend online | EBS, fdisk, XFS, growpart |
-| [6. Amazon EC2 Hands-on Lab(Add Member SSH)](6.%20Amazon%20EC2%20Hands-on%20Lab%28Add%20Member%20SSH%29.md) | Tao user dev01, cau hinh chmod .ssh (700) va authorized_keys (600) | SSH, Linux Security |
+| [1. Amazon EC2 Hands-on Lab(Linux)](1.%20EC2/1.%20Amazon%20EC2%20Hands-on%20Lab%28Linux%29.md) | Khoi tao EC2 Linux, SSH from Windows, cai dat httpd, Snapshot/AMI | SSH, HTTP, Apache |
+| [2. Amazon EC2 Hands-on Lab(Windows)](1.%20EC2/2.%20Amazon%20EC2%20Hands-on%20Lab%28Windows%29.md) | Khoi tao EC2 Windows Server, giai ma mat khau Administrator, RDP login | RDP, Windows Server |
+| [3. Amazon EC2 User Data and Metadata Lab](1.%20EC2/3.%20Amazon%20EC2%20User%20Data%20and%20Metadata%20Lab.md) | Tu dong hoa cai dat Web Server va lay IP dong qua IMDSv2 | User Data, IMDSv2, Bash |
+| [4. Amazon EC2 Hands-on Lab(Windows Volume)](1.%20EC2/4.%20Amazon%20EC2%20Hands-on%20Lab%28Windows%20Volume%29.md) | Tao EBS Volume, attach vao instance, online va format NTFS | EBS, Windows Disk Mgmt |
+| [5. Amazon EC2 Hands-on Lab(Linux Volume)](1.%20EC2/5.%20Amazon%20EC2%20Hands-on%20Lab%28Linux%20Volume%29.md) | EBS volume, fdisk partition, XFS format, /etc/fstab auto-mount, extend online | EBS, fdisk, XFS, growpart |
+| [6. Amazon EC2 Hands-on Lab(Add Member SSH)](1.%20EC2/6.%20Amazon%20EC2%20Hands-on%20Lab%28Add%20Member%20SSH%29.md) | Tao user dev01, cau hinh chmod .ssh (700) va authorized_keys (600) | SSH, Linux Security |
+
+### 5. Huong dan thuc hanh IAM (IAM Hands-on Labs)
+
+Cac huong dan thuc hanh quan ly nguoi dung, nhom va phan quyen tren AWS IAM:
+
+| File | Mo ta | Cong nghe |
+|------|-------|-----------|
+| [1. Amazon IAM Hands-on Lab(User, Group and Policy)](2.%20IAM/1.%20Amazon%20IAM%20Hands-on%20Lab%28User%2C%20Group%20and%20Policy%29.md) | Tao group AdministratorAccess, tao user, add vao group, tai csv credentials va login console | AWS IAM, AWS Console |
 
 ---
 
@@ -88,12 +96,15 @@ cloud/aws/deploy/
     buildspec-maven.yml
     appspec-ecs-blue-green.yml
     codepipeline-eks.json
-  1. Amazon EC2 Hands-on Lab(Linux).md
-  2. Amazon EC2 Hands-on Lab(Windows).md
-  3. Amazon EC2 User Data and Metadata Lab.md
-  4. Amazon EC2 Hands-on Lab(Windows Volume).md
-  5. Amazon EC2 Hands-on Lab(Linux Volume).md
-  6. Amazon EC2 Hands-on Lab(Add Member SSH).md
+  1. EC2/
+    1. Amazon EC2 Hands-on Lab(Linux).md
+    2. Amazon EC2 Hands-on Lab(Windows).md
+    3. Amazon EC2 User Data and Metadata Lab.md
+    4. Amazon EC2 Hands-on Lab(Windows Volume).md
+    5. Amazon EC2 Hands-on Lab(Linux Volume).md
+    6. Amazon EC2 Hands-on Lab(Add Member SSH).md
+  2. IAM/
+    1. Amazon IAM Hands-on Lab(User, Group and Policy).md
   README.md
 ```
 
