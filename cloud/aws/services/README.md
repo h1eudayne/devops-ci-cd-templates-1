@@ -185,6 +185,7 @@ VPC la mang ao rieng tren AWS, cho phep ban dinh nghia dai IP, subnet, route tab
 - [8. Amazon IAM Hands-on Lab(User, Group and Policy)](2. IAM/8. Amazon IAM Hands-on Lab(User, Group and Policy).md) (Lien ket den thuc hanh deploy): Thực hành tạo nhóm người dùng có quyền quản trị, thêm người dùng mới, tải csv credentials và đăng nhập console để kiểm nghiệm.
 - [9. Amazon IAM Hands-on Lab(AWS CLI and MFA)](2. IAM/9. Amazon IAM Hands-on Lab(AWS CLI and MFA).md) (Lien ket den thuc hanh deploy): Thực hành cài đặt AWS CLI, cấu hình thông tin xác thực qua Access Key / Secret Key, các câu lệnh S3 cơ bản, thiết lập policy bắt buộc xác thực MFA, kiểm nghiệm lỗi AccessDenied trên CLI và cấu hình profile mfa để truy cập thành công.
 - [10. Amazon IAM Hands-on Lab(IAM Role for EC2)](2. IAM/10. Amazon IAM Hands-on Lab(IAM Role for EC2).md) (Lien ket den thuc hanh deploy): Thực hành tạo IAM Role cho phép EC2 truy cập dịch vụ S3, gán role vào máy chủ và xác thực kết nối không cần key.
+- [11. Amazon IAM Hands-on Lab(Assume Role with AWS CLI)](2. IAM/11. Amazon IAM Hands-on Lab(Assume Role with AWS CLI).md) (Lien ket den thuc hanh deploy): Thực hành cấu hình giả lập vai trò (Assume Role) qua AWS CLI và tệp credentials sử dụng thông tin xác thực tạm thời từ AWS STS.
 
 **No la gi:**
 IAM la dich vu quan ly quyen truy cap tren AWS. IAM cho phep tao user, group, role va policy de kiem soat ai duoc phep lam gi voi tai nguyen AWS. Trong DevOps, IAM role duoc su dung cho EC2 instance, EKS pod (IRSA), Lambda function va CI/CD pipeline.
