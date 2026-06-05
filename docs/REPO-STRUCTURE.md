@@ -40,7 +40,8 @@ Repo nay duoc to chuc theo muc dich su dung, tach biet ro rang giua cac moi truo
 │   │   ├── README.md                   # Muc luc va gioi thieu
 │   │   ├── 03-setup-server-template.md
 │   │   ├── 04-server-access-management.md
-│   │   └── 05-deploy-server-access-management.md
+│   │   ├── 05-deploy-server-access-management.md
+│   │   └── 06-install-teleport.md
 │   ├── setup/                          # Huong dan cai dat theo hoc trinh & cong cu
 │   │   ├── 01-linux-server/            # Bai 1-7: Ubuntu, lenh, vim, phan quyen
 │   │   ├── 02-manual-deployment/       # Bai 8-10: Trien khai thu cong FE, Java Spring
