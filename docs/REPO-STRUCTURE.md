@@ -33,7 +33,9 @@ Repo nay duoc to chuc theo muc dich su dung, tach biet ro rang giua cac moi truo
 │   └── roadmap-advanced.md         # Lo trinh DevOps Nang cao (tung buoc cap nhat)
 ├── on-premise/
 │   ├── network/                        # Kien truc mang noi bo (On-premise & Cloud)
-│   │   └── README.md                   # So do va kien truc mang
+│   │   ├── README.md                   # Muc luc va gioi thieu
+│   │   ├── 01-intranet-network-model.md
+│   │   └── 02-environment-initialization-notes.md
 │   ├── setup/                          # Huong dan cai dat theo hoc trinh & cong cu
 │   │   ├── 01-linux-server/            # Bai 1-7: Ubuntu, lenh, vim, phan quyen
 │   │   ├── 02-manual-deployment/       # Bai 8-10: Trien khai thu cong FE, Java Spring
