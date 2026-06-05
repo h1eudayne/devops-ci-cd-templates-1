@@ -18,6 +18,7 @@ Repository nay tap trung luu tru va tai su dung toan bo tai nguyen DevOps da duo
 ├── roadmap/                 # Lo trinh hoc tap DevOps (Fresher, Advanced & K8s)
 ├── on-premise/              # Ha tang on-premise tu quan ly
 │   ├── network/             # So do va kien truc mang noi bo
+│   ├── server/              # Quan tri may chu & VM template
 │   ├── setup/               # Huong dan cai dat theo hoc trinh & cong cu
 │   ├── workflow/            # Quy trinh van hanh
 │   ├── scripts/             # Bash scripts cai dat tu dong
@@ -63,6 +64,7 @@ Repository nay tap trung luu tru va tai su dung toan bo tai nguyen DevOps da duo
 | Folder | Mo ta |
 | --- | --- |
 | `network/` | So do kien truc va mo hinh mang noi bo (on-premise) va ket noi cloud |
+| `server/` | Quan tri may chu, thiet lap he dieu hanh va khoi tao VM template |
 | `setup/` |  Huong dan cai dat chi tiet theo hoc trinh & cong cu (Linux, Deploy, Gitlab, Docker, Jenkins, Monitoring, K8s) |
 | `workflow/` |  Quy trinh van hanh thuc te, vi du: import du lieu SQL qua NFS tren K8s |
 | `scripts/` |  Bash script tu dong hoa cai dat: Docker, K8s cluster, Helm, Ingress Nginx, Metrics Server, NFS, Harbor, Rancher, Jenkins, Storage |

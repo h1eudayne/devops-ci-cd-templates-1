@@ -36,6 +36,9 @@ Repo nay duoc to chuc theo muc dich su dung, tach biet ro rang giua cac moi truo
 │   │   ├── README.md                   # Muc luc va gioi thieu
 │   │   ├── 01-intranet-network-model.md
 │   │   └── 02-environment-initialization-notes.md
+│   ├── server/                         # Quan tri may chu & VM template
+│   │   ├── README.md                   # Muc luc va gioi thieu
+│   │   └── 03-setup-server-template.md
 │   ├── setup/                          # Huong dan cai dat theo hoc trinh & cong cu
 │   │   ├── 01-linux-server/            # Bai 1-7: Ubuntu, lenh, vim, phan quyen
 │   │   ├── 02-manual-deployment/       # Bai 8-10: Trien khai thu cong FE, Java Spring
@@ -171,6 +174,7 @@ Kieu nay phu hop voi template co:
 Thu muc `on-premise/` chia thanh cac nhom chuc nang ro rang:
 
 - `network/` — So do va kien truc mang noi bo (on-premise) va ket noi cloud.
+- `server/` — Tai lieu quan tri, thiet lap he dieu hanh va khoi tao VM template.
 - `setup/` — Tai lieu huong dan cai dat duoc danh so tu 01 den 06 bam sat lo trinh DevOps Fresher, va cac thu muc rieng cho Kubernetes, mysql, rancher, storage.
 - `workflow/` — Quy trinh van hanh, import du lieu, backup, disaster recovery.
 - `scripts/` — Bash scripts tu dong hoa (cai dat K8s, metrics-server, NFS, v.v.).
