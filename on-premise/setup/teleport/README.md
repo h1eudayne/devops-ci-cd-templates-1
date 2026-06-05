@@ -14,5 +14,7 @@ Thư mục này chứa tài liệu và cấu hình phục vụ việc triển kh
    * Tải và cài đặt các tệp tin thực thi binary của Teleport.
    * Khởi tạo tệp tin cấu hình `teleport.yaml` cho Teleport Server.
    * Cấu hình file systemd service quản lý dịch vụ Teleport (`teleport.service`).
+   * Khởi tạo tài khoản quản trị Teleport (`admin`).
+
 
 
