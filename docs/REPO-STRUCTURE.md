@@ -26,11 +26,14 @@ Repo nay duoc to chuc theo muc dich su dung, tach biet ro rang giua cac moi truo
 
 ```text
 .
-├── roadmap/                        # Lo trinh hoc tap DevOps (Fresher & Kubernetes)
+├── roadmap/                        # Lo trinh hoc tap DevOps (Fresher, Advanced & Kubernetes)
 │   ├── README.md                   # Muc luc roadmap
 │   ├── roadmap-fresher.md          # Lo trinh DevOps Fresher (35 bai)
-│   └── roadmap-kubernetes.md       # Lo trinh Kubernetes (43 bai)
+│   ├── roadmap-kubernetes.md       # Lo trinh Kubernetes (43 bai)
+│   └── roadmap-advanced.md         # Lo trinh DevOps Nang cao (tung buoc cap nhat)
 ├── on-premise/
+│   ├── network/                        # Kien truc mang noi bo (On-premise & Cloud)
+│   │   └── README.md                   # So do va kien truc mang
 │   ├── setup/                          # Huong dan cai dat theo hoc trinh & cong cu
 │   │   ├── 01-linux-server/            # Bai 1-7: Ubuntu, lenh, vim, phan quyen
 │   │   ├── 02-manual-deployment/       # Bai 8-10: Trien khai thu cong FE, Java Spring
@@ -166,6 +169,7 @@ Kieu nay phu hop voi template co:
 
 Thu muc `on-premise/` chia thanh cac nhom chuc nang ro rang:
 
+- `network/` — So do va kien truc mang noi bo (on-premise) va ket noi cloud.
 - `setup/` — Tai lieu huong dan cai dat duoc danh so tu 01 den 07 bam sat lo trinh DevOps tu co ban den nang cao, va cac thu muc rieng cho Kubernetes, mysql, rancher, storage.
 - `workflow/` — Quy trinh van hanh, import du lieu, backup, disaster recovery.
 - `scripts/` — Bash scripts tu dong hoa (cai dat K8s, metrics-server, NFS, v.v.).
