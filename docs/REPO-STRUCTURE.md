@@ -47,14 +47,16 @@ Repo nay duoc to chuc theo muc dich su dung, tach biet ro rang giua cac moi truo
 │   │   ├── 04-docker-registry/         # Bai 18-25: Docker runtime, Harbor registry
 │   │   ├── 05-jenkins/                 # Bai 27-32: Jenkins CI/CD
 │   │   ├── 06-monitoring/              # Bai 33-35: Zabbix, Kube-Prometheus, Uptime Kuma
+│   │   ├── certbot/                    # Cau hinh va xin SSL Let's Encrypt
+│   │   │   └── README.md
 │   │   ├── kubernetes/                 # Huong dan K8s nang cao (da hoan thien)
 │   │   ├── mysql/                      # Cau hinh database
 │   │   ├── rancher/                    # Cong cu quan ly K8s
 │   │   ├── storage/                    # Ha tang luu tru (NFS)
 │   │   └── teleport/                   # Setup cong cu quan ly server Teleport
 │   │       ├── README.md
-│   │       ├── 05-deploy-server-access-management.md
-│   │       └── 06-install-teleport.md
+│   │       └── 05-deploy-server-access-management.md
+
 
 
 │   ├── workflow/                       # Quy trinh van hanh
@@ -190,7 +192,7 @@ Thu muc `on-premise/` chia thanh cac nhom chuc nang ro rang:
 
 - `network/` — So do va kien truc mang noi bo (on-premise) va ket noi cloud.
 - `server/` — Tai lieu quan tri, thiet lap he dieu hanh va khoi tao VM template.
-- `setup/` — Tai lieu huong dan cai dat duoc danh so tu 01 den 06 bam sat lo trinh DevOps Fresher, va cac thu muc rieng cho Kubernetes, mysql, rancher, storage, teleport.
+- `setup/` — Tai lieu huong dan cai dat duoc danh so tu 01 den 06 bam sat lo trinh DevOps Fresher, va cac thu muc rieng cho Kubernetes, mysql, rancher, storage, teleport, certbot.
 - `workflow/` — Quy trinh van hanh, import du lieu, backup, disaster recovery.
 - `scripts/` — Bash scripts tu dong hoa (cai dat K8s, metrics-server, NFS, v.v.).
 - `kubernetes/` — K8s manifest templates (Deployment, Service, HPA, PV/PVC, v.v.).
