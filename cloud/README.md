@@ -18,6 +18,10 @@ cloud/
 │   ├── services/        # Dich vu Azure la gi + huong dan
 │   ├── deploy/          # Cau hinh deploy len Azure
 │   └── README.md
+├── cloudflare/
+│   ├── README.md        # Gioi thieu dich vu (DNS, Tunnel, WAF)
+│   ├── services/
+│   └── deploy/
 └── README.md            # (file nay)
 ```
 
