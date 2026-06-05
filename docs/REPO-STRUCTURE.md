@@ -84,7 +84,8 @@ Repo nay duoc to chuc theo muc dich su dung, tach biet ro rang giua cac moi truo
 ├── cloud/
 │   ├── aws/
 │   ├── gcp/
-│   └── azure/
+│   ├── azure/
+│   └── cloudflare/                     # Dich vu Cloudflare (DNS, Tunnel, WAF)
 ├── pipelines/
 │   ├── gitlab-ci/
 │   │   ├── continuous-integration/
