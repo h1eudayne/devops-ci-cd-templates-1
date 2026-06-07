@@ -138,6 +138,7 @@ RDS la dich vu database quan ly cua AWS, ho tro nhieu engine nhu MySQL, PostgreS
 - [1. Amazon S3](3. S3/1. Amazon S3.md): Định nghĩa dịch vụ, các khái niệm cốt lõi (Bucket, Object, Key), đặc trưng cơ bản (tính bất biến, dung lượng file), tính năng nổi bật và các trường hợp sử dụng.
 - [2. Amazon S3 Features](3. S3/2. Amazon S3 Features.md): Các tính năng của S3 bao gồm Storage Classes, Storage Management, Access Management, Data Processing, Logging & Monitoring (CloudTrail, Server Access Log), Analytics & Insights và Strong Consistency.
 - [3. Amazon S3 Integration](3. S3/3. Amazon S3 Integration.md): Khả năng kết hợp của S3 với các dịch vụ AWS khác như EC2/ECS/EKS/Lambda (lưu trữ tệp tin), VPC/ALB/CloudTrail (lưu trữ log), Athena/Glue (Big Data/ETL) và CloudFront (Static Website).
+- [5. Amazon S3 Bucket Policy & ACL](3. S3/5. Amazon S3 Bucket Policy & ACL.md): Bảo mật mức tài nguyên trong S3, so sánh với IAM Policy, cấu trúc JSON chính sách bucket và vai trò của Access Control List (ACL).
 
 ### Huong dan thuc hanh (Hands-on Labs)
 - [4. Amazon S3 Hands-on Lab(Basic)](3. S3/4. Amazon S3 Hands-on Lab(Basic).md) (Lien ket den thuc hanh deploy): Thực hành các thao tác cơ bản bao gồm truy cập S3, tạo Bucket, tạo Folder, upload file/folder, và thực hiện Move đối tượng.
