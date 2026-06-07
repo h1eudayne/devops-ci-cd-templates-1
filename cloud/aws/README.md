@@ -31,6 +31,7 @@ aws/
 | Storage | S3 | Object storage |
 | Storage | EFS | Shared file system |
 | Network | VPC | Virtual private network |
+| Network | ELB | Elastic load balancer |
 | Security | IAM | Identity & access management |
 | TLS | ACM | Certificate manager |
 | CI/CD | CodePipeline | Native AWS CI/CD |

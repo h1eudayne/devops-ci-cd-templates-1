@@ -21,6 +21,7 @@ Thu muc nay mo ta cac dich vu AWS thuong duoc su dung trong quy trinh DevOps va 
 | 11 | [CloudFront](#10-cloudfront) | CDN |
 | 12 | [ACM](#11-acm---certificate-manager) | TLS certificates |
 | 13 | [EFS](#12-efs---elastic-file-system) | Shared file storage |
+| 14 | [ELB (Elastic Load Balancing)](4. ELB/1. Amazon ELB.md) | Bo can bang tai |
 
 ---
 
@@ -316,6 +317,23 @@ EFS la dich vu shared file storage (NFS) cua AWS. EFS cho phep nhieu EC2 instanc
 3. Cau hinh Security Group cho phep NFS traffic (port 2049) tu EKS node.
 4. Cai dat EFS CSI Driver tren EKS: `kubectl apply -k "github.com/kubernetes-sigs/aws-efs-csi-driver/deploy/kubernetes/overlays/stable"`.
 5. Tao PersistentVolume va PersistentVolumeClaim su dung EFS file system ID.
+
+---
+
+## 14. ELB - Elastic Load Balancing
+
+**Danh sach tai lieu hoc tap va huong dan chi tiet:**
+
+### Tai lieu ly thuyet (Theory Documents)
+- [1. Amazon ELB](4. ELB/1. Amazon ELB.md): Định nghĩa dịch vụ, khái niệm Single Point of Failure (SPOF), các cấp độ sự cố từ phần cứng đến trung tâm dữ liệu, và cách Load Balancer kết hợp Redundancy để giải quyết SPOF.
+
+**No la gi:**
+ELB la dich vu phan phoi tu dong luu luong truy cap den nhieu muc tieu nhu EC2 instance, container, va IP. ELB giup dam bao tinh san sang cao (High Availability) va kha nang chiu loi (Fault Tolerance) cho he thong.
+
+**Khi nao su dung:**
+- Khi chay nhieu hon 1 web server va can phan chia deu traffic cho cac server phia sau.
+- Khi muon tu dong loc va bo cac server khong healthy ra khoi he thong qua Health Checks.
+- Khi muon cau hinh SSL/TLS tap trung (SSL termination) tai Load Balancer.
 
 ---
 
