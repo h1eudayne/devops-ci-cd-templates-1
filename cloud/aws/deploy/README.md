@@ -80,6 +80,14 @@ Cac huong dan thuc hanh quan ly nguoi dung, nhom va phan quyen tren AWS IAM:
 | [3. Amazon IAM Hands-on Lab(IAM Role for EC2)](2.%20IAM/3.%20Amazon%20IAM%20Hands-on%20Lab%28IAM%20Role%20for%20EC2%29.md) | Tao IAM Role cho phep EC2 truy cap dịch vụ S3, gan role vao EC2 va kiem tra ket noi khong can key | AWS IAM, S3, EC2 |
 | [4. Amazon IAM Hands-on Lab(Assume Role with AWS CLI)](2.%20IAM/4.%20Amazon%20IAM%20Hands-on%20Lab%28Assume%20Role%20with%20AWS%20CLI%29.md) | Gỡ quyền trực tiếp của User, tạo Role PowerUserAccess với Custom Trust Policy, và dùng AWS CLI assume-role với profile credentials tạm thời | AWS IAM, AWS CLI, STS |
 
+### 6. Huong dan thuc hanh S3 (S3 Hands-on Labs)
+
+Cac huong dan thuc hanh quan ly thung chua va doi tuong tren AWS S3:
+
+| File | Mo ta | Cong nghe |
+|------|-------|-----------|
+| [1. Amazon S3 Hands-on Lab(Basic)](3.%20S3/1.%20Amazon%20S3%20Hands-on%20Lab%28Basic%29.md) | Các thao tác cơ bản bao gồm truy cập S3 Console, khởi tạo bucket, tạo folder, tải lên tệp tin và thực hiện di chuyển (move) đối tượng giữa các thư mục | AWS S3, AWS Console |
+
 ---
 
 ## Cau truc khuyen nghi
@@ -110,6 +118,8 @@ cloud/aws/deploy/
     1. Amazon IAM Hands-on Lab(User, Group and Policy).md
     2. Amazon IAM Hands-on Lab(AWS CLI and MFA).md
     3. Amazon IAM Hands-on Lab(IAM Role for EC2).md
+  3. S3/
+    1. Amazon S3 Hands-on Lab(Basic).md
   README.md
 ```
 
