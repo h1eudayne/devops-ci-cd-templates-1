@@ -1,6 +1,6 @@
-# DevOps CI/CD Templates & On-Premise Infrastructure
+# DevOps & System Architecture (On-Premise, Cloud, System Design & Network)
 
-Repository nay tap trung luu tru va tai su dung toan bo tai nguyen DevOps da duoc chuan hoa: pipeline CI/CD, Kubernetes manifest, Dockerfile, Docker Compose stack, bash script cai dat, huong dan setup ha tang on-premise va cau hinh Nginx.
+Repository này tập trung lưu trữ, chuẩn hóa và hướng dẫn triển khai các kiến thức về Thiết kế hệ thống (System Design), Mạng (Network), hạ tầng On-premise & Cloud, các kịch bản cài đặt tự động (setup scripts), Kubernetes manifests, Dockerfiles và các templates CI/CD pipelines.
 
 ## Muc tieu
 
