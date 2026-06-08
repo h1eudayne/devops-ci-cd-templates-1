@@ -330,7 +330,7 @@ EFS la dich vu shared file storage (NFS) cua AWS. EFS cho phep nhieu EC2 instanc
 - [3. Amazon ELB Types](4. ELB/3. Amazon ELB Types.md): Phân loại các dòng Elastic Load Balancer (ALB, NLB, GWLB, CLB) dựa trên mô hình mạng OSI 7 layers, bảng so sánh tính năng và sơ đồ định tuyến.
 
 ### Huong dan thuc hanh (Hands-on Labs)
-- [1. Amazon ELB Hands-on Lab](../deploy/4.%20ELB/1.%20Amazon%20ELB%20Hands-on%20Lab.md): Cấu hình cân bằng tải bằng Application Load Balancer (ALB) kết hợp với 2 EC2 instances chạy script User Data phân biệt.
+- [4. Amazon ELB Hands-on Lab](4. ELB/4. Amazon ELB Hands-on Lab.md) (Lien ket den thuc hanh deploy): Cấu hình cân bằng tải bằng Application Load Balancer (ALB) kết hợp với 2 EC2 instances chạy script User Data phân biệt.
 
 
 **No la gi:**
