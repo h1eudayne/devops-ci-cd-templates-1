@@ -93,13 +93,14 @@ Cac huong dan thuc hanh quan ly thung chua va doi tuong tren AWS S3:
 | [5. Amazon S3 Static Website Hosting Lab](3.%20S3/5.%20Amazon%20S3%20Static%20Website%20Hosting%20Lab.md) | Thực hành upload mã nguồn qua AWS CLI, bật Static Website Hosting và cấu hình Public Access / Bucket Policy | AWS S3, AWS Console, AWS CLI |
 | [6. Amazon S3 Event Notifications Lab](3.%20S3/6.%20Amazon%20S3%20Event%20Notifications%20Lab.md) | Thực hành cấu hình S3 Event Notification kết hợp với Lambda Function, kiểm tra log tự động qua CloudWatch khi tải lên đối tượng | AWS S3, AWS Lambda, AWS Console |
 
-### 7. Huong dan thuc hanh ELB (ELB Hands-on Labs)
+### 7. Huong dan thuc hanh ELB & Auto Scaling (ELB & ASG Hands-on Labs)
 
-Cac huong dan thuc hanh quan ly bo can bang tai tren AWS ELB:
+Cac huong dan thuc hanh quan ly bo can bang tai va tu dong co gian tren AWS ELB va Auto Scaling:
 
 | File | Mo ta | Cong nghe |
 |------|-------|-----------|
 | [1. Amazon ELB Hands-on Lab](4.%20ELB/1.%20Amazon%20ELB%20Hands-on%20Lab.md) | Cấu hình cân bằng tải bằng Application Load Balancer (ALB) kết hợp với 2 EC2 instances ở các zone khác nhau chạy script User Data phân biệt | AWS ELB, ALB, EC2, User Data |
+| [2. Amazon Auto Scaling Group Hands-on Lab](4.%20ELB/2.%20Amazon%20Auto%20Scaling%20Group%20Hands-on%20Lab.md) | Các bước thực hành chuẩn bị Base Image (Golden Image) từ EC2 gốc bằng cách enable dịch vụ httpd tự chạy cùng hệ thống và đóng gói thành AMI | AWS ASG, EC2, SSH, AMI, Systemd |
 
 ---
 
@@ -140,6 +141,7 @@ cloud/aws/deploy/
     6. Amazon S3 Event Notifications Lab.md
   4. ELB/
     1. Amazon ELB Hands-on Lab.md
+    2. Amazon Auto Scaling Group Hands-on Lab.md
   README.md
 ```
 
