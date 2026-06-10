@@ -8,26 +8,26 @@ Thư mục này mô tả các dịch vụ AWS thường được sử dụng tro
 
 | # | Dịch vụ | Mô tả ngắn |
 |---|---------|------------|
-| 01 | [EC2 (Amazon Elastic Compute Cloud)](1. EC2/1. Amazon EC2.md) | Virtual server (Máy chủ ảo) |
-| 02 | [IAM (Identity & Access Management)](2. IAM/1. Amazon IAM.md) | Identity & access management |
-| 03 | [S3 (Amazon Simple Storage Service)](3. S3/1. Amazon S3.md) | Object storage |
-| 04 | [ELB & Auto Scaling (Cân bằng tải & Co giãn)](4. ELB/1. Amazon ELB.md) | Bộ cân bằng tải và Co giãn tự động |
-| 05 | [EKS (Elastic Kubernetes Service)](5. EKS.md) | Managed Kubernetes |
-| 06 | [ECS (Elastic Container Service)](6. ECS.md) | Container orchestration |
-| 07 | [ECR (Elastic Container Registry)](7. ECR.md) | Docker image registry |
-| 08 | [RDS (Relational Database Service)](8. RDS.md) | Managed database |
-| 09 | [VPC (Virtual Private Cloud)](9. VPC.md) | Virtual network |
-| 10 | [CodePipeline / CodeBuild / CodeDeploy](10. CodePipeline.md) | CI/CD native AWS |
-| 11 | [Route 53](11. Route 53.md) | DNS |
-| 12 | [CloudFront](12. CloudFront.md) | CDN |
-| 13 | [ACM (Certificate Manager)](13. ACM.md) | TLS certificates |
-| 14 | [EFS (Elastic File System)](14. EFS.md) | Shared file storage |
+| 01 | [EC2 (Amazon Elastic Compute Cloud)](1. EC2/1. Amazon EC2.md) | Máy chủ ảo (Virtual Server) |
+| 02 | [IAM (Identity & Access Management)](2. IAM/1. Amazon IAM.md) | Quản lý định danh & quyền truy cập (IAM) |
+| 03 | [S3 (Amazon Simple Storage Service)](3. S3/1. Amazon S3.md) | Lưu trữ đối tượng (Object Storage) |
+| 04 | [ELB & Auto Scaling (Cân bằng tải & Co giãn)](4. ELB/1. Amazon ELB.md) | Bộ cân bằng tải và Co giãn tự động (ELB & ASG) |
+| 05 | [EKS (Elastic Kubernetes Service)](5. EKS.md) | Dịch vụ Kubernetes được quản lý (Managed Kubernetes) |
+| 06 | [ECS (Elastic Container Service)](6. ECS.md) | Điều phối container (Container Orchestration) |
+| 07 | [ECR (Elastic Container Registry)](7. ECR.md) | Kho lưu trữ Docker image (Docker Registry) |
+| 08 | [RDS (Relational Database Service)](8. RDS.md) | Cơ sở dữ liệu quan hệ được quản lý (Managed SQL Database) |
+| 09 | [VPC (Virtual Private Cloud)](9. VPC.md) | Mạng ảo dùng riêng (Virtual Private Cloud) |
+| 10 | [CodePipeline / CodeBuild / CodeDeploy](10. CodePipeline.md) | Bộ dịch vụ CI/CD nguyên bản của AWS (Pipeline) |
+| 11 | [Route 53](11. Route 53.md) | Hệ thống phân giải tên miền (DNS) |
+| 12 | [CloudFront](12. CloudFront.md) | Mạng phân phối nội dung (CDN) |
+| 13 | [ACM (Certificate Manager)](13. ACM.md) | Quản lý chứng chỉ bảo mật TLS/SSL (ACM) |
+| 14 | [EFS (Elastic File System)](14. EFS.md) | Hệ thống tệp lưu trữ dùng chung (Shared Storage) |
 
 ---
 
 ## Lưu ý chung
 
-- Tất cả các dịch vụ trên nên được cấu hình bằng IaC (Terraform, CloudFormation) để đảm bảo reproducibility.
+- Tất cả các dịch vụ trên nên được cấu hình bằng IaC (Terraform, CloudFormation) để đảm bảo tính tái sử dụng và đồng bộ.
 - Không commit AWS Access Key, Secret Key, hoặc bất kỳ thông tin xác thực nào vào repository.
 - Ưu tiên sử dụng IAM Role thay vì Access Key khi có thể.
 - Tham khảo thư mục `cloud/aws/deploy/` để xem các deploy template tích hợp với các dịch vụ này.
