@@ -1,45 +1,45 @@
 # AWS Templates
 
-Thu muc nay chua cac tai nguyen lien quan den Amazon Web Services (AWS) cho DevOps.
+Thư mục này chứa các tài nguyên liên quan đến Amazon Web Services (AWS) cho DevOps.
 
-## Cau truc
+## Cấu trúc
 
 ```text
 aws/
-├── services/        # Gioi thieu cac dich vu AWS + huong dan su dung
+├── services/        # Giới thiệu các dịch vụ AWS + hướng dẫn sử dụng
 │   └── README.md
-├── deploy/          # Cau hinh deploy len AWS
+├── deploy/          # Cấu hình deploy lên AWS
 │   └── README.md
-├── templates/       # Mau cau hinh JSON/YAML cho cac dich vu (S3, IAM)
-└── README.md        # (file nay)
+├── templates/       # Mẫu cấu hình JSON/YAML cho các dịch vụ (S3, IAM)
+└── README.md        # (file này)
 ```
 
-| Folder | Mo ta | Khi nao vao? |
+| Thư mục | Mô tả | Khi nào vào? |
 | --- | --- | --- |
-| `services/` | Giai thich tung dich vu AWS la gi, khi nao dung, cach bat dau | "Toi chua biet EKS/ECS/ECR la gi" |
-| `deploy/` | Cau hinh va huong dan deploy ung dung len AWS | "Toi can file config deploy len EKS/ECR" |
-| `templates/` | Mẫu cấu hình JSON/YAML phục vụ phân quyền và quản lý tài nguyên | "Toi can tim cac file JSON mau cho S3 Bucket Policy hoac IAM Policy" |
+| `services/` | Giải thích từng dịch vụ AWS là gì, khi nào dùng, cách bắt đầu | "Tôi chưa biết EKS/ECS/ECR là gì" |
+| `deploy/` | Cấu hình và hướng dẫn deploy ứng dụng lên AWS | "Tôi cần file config deploy lên EKS/ECR" |
+| `templates/` | Mẫu cấu hình JSON/YAML phục vụ phân quyền và quản lý tài nguyên | "Tôi cần tìm các file JSON mẫu cho S3 Bucket Policy hoặc IAM Policy" |
 
-## Cac dich vu AWS chinh
+## Các dịch vụ AWS chính
 
-| Nhom | Dich vu | Mo ta ngan |
+| Nhóm | Dịch vụ | Mô tả ngắn |
 | --- | --- | --- |
-| Compute | EKS | Managed Kubernetes |
-| Compute | ECS | Container orchestration |
-| Registry | ECR | Docker image registry |
-| Database | RDS | Managed relational database |
-| Storage | S3 | Object storage |
-| Storage | EFS | Shared file system |
-| Network | VPC | Virtual private network |
+| Compute | EKS | Dịch vụ Kubernetes quản lý (Managed Kubernetes) |
+| Compute | ECS | Điều phối Container (Container Orchestration) |
+| Registry | ECR | Kho lưu trữ Docker image (Docker Image Registry) |
+| Database | RDS | Cơ sở dữ liệu quan hệ được quản lý (Managed SQL) |
+| Storage | S3 | Lưu trữ đối tượng (Object Storage) |
+| Storage | EFS | Lưu trữ tệp dùng chung (Shared Filesystem) |
+| Network | VPC | Mạng riêng ảo (Virtual Private Cloud) |
 | Network | ELB & Auto Scaling | Cân bằng tải & Co giãn tự động |
-| Security | IAM | Identity & access management |
-| TLS | ACM | Certificate manager |
-| CI/CD | CodePipeline | Native AWS CI/CD |
-| DNS | Route 53 | Domain name service |
-| CDN | CloudFront | Content delivery network |
+| Security | IAM | Quản lý định danh & truy cập (IAM) |
+| TLS | ACM | Quản lý chứng chỉ bảo mật (Certificate Manager) |
+| CI/CD | CodePipeline | Bộ công cụ CI/CD nguyên bản của AWS |
+| DNS | Route 53 | Hệ thống phân giải tên miền (DNS) |
+| CDN | CloudFront | Mạng phân phối nội dung (CDN) |
 
-## Luu y
+## Lưu ý
 
-- Khong commit AWS Access Key, Secret Key, hoac bat ky thong tin xac thuc nao.
-- Uu tien su dung Terraform module hoac CloudFormation de tai su dung.
-- Tat ca template nen su dung bien (variable) cho region, account ID, ten resource.
+- Không commit AWS Access Key, Secret Key, hoặc bất kỳ thông tin xác thực nào.
+- Ưu tiên sử dụng Terraform module hoặc CloudFormation để tái sử dụng.
+- Tất cả template nên sử dụng biến (variable) cho region, account ID, tên resource.
