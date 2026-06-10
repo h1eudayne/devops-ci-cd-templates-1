@@ -1908,27 +1908,34 @@
                   ]
                 },
                 {
-                  "name": "5. EKS.md",
+                  "name": "5. RDS",
+                  "path": "cloud/aws/services/5. RDS",
+                  "type": "directory",
+                  "children": [
+                    {
+                      "name": "1. Amazon RDS.md",
+                      "title": "RDS (Relational Database Service)",
+                      "path": "cloud/aws/services/5. RDS/1. Amazon RDS.md",
+                      "type": "file"
+                    }
+                  ]
+                },
+                {
+                  "name": "6. EKS.md",
                   "title": "EKS (Elastic Kubernetes Service)",
-                  "path": "cloud/aws/services/5. EKS.md",
+                  "path": "cloud/aws/services/6. EKS.md",
                   "type": "file"
                 },
                 {
-                  "name": "6. ECS.md",
+                  "name": "7. ECS.md",
                   "title": "ECS (Elastic Container Service)",
-                  "path": "cloud/aws/services/6. ECS.md",
+                  "path": "cloud/aws/services/7. ECS.md",
                   "type": "file"
                 },
                 {
-                  "name": "7. ECR.md",
+                  "name": "8. ECR.md",
                   "title": "ECR (Elastic Container Registry)",
-                  "path": "cloud/aws/services/7. ECR.md",
-                  "type": "file"
-                },
-                {
-                  "name": "8. RDS.md",
-                  "title": "RDS (Relational Database Service)",
-                  "path": "cloud/aws/services/8. RDS.md",
+                  "path": "cloud/aws/services/8. ECR.md",
                   "type": "file"
                 },
                 {
