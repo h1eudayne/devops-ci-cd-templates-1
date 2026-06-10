@@ -30,7 +30,9 @@ export default function Sidebar({
   onToggleFileComplete,
   expandedNodes,
   onToggleExpand,
-  isOpen
+  isOpen,
+  selectedTopic,
+  onSelectTopic
 }) {
 
   // Helper to determine if a node is a parent directory of active file (to auto-expand it)
@@ -179,6 +181,45 @@ export default function Sidebar({
 
   return (
     <aside className={`sidebar-left ${isOpen ? 'open' : ''}`} id="sidebar-left">
+      <div className="sidebar-topic-selector">
+        <span className="selector-label">Chủ đề học tập</span>
+        <div className="topic-pills">
+          <button 
+            className={`topic-pill topic-pill-all ${selectedTopic === 'all' ? 'active' : ''}`}
+            onClick={() => onSelectTopic('all')}
+          >
+            Tất cả tài liệu
+          </button>
+          <button 
+            className={`topic-pill ${selectedTopic === 'system-design' ? 'active' : ''}`}
+            onClick={() => onSelectTopic('system-design')}
+            title="System Design"
+          >
+            System Design
+          </button>
+          <button 
+            className={`topic-pill ${selectedTopic === 'kubernetes' ? 'active' : ''}`}
+            onClick={() => onSelectTopic('kubernetes')}
+            title="Kubernetes"
+          >
+            Kubernetes
+          </button>
+          <button 
+            className={`topic-pill ${selectedTopic === 'aws' ? 'active' : ''}`}
+            onClick={() => onSelectTopic('aws')}
+            title="EC2 & AWS Cloud"
+          >
+            EC2 & AWS
+          </button>
+          <button 
+            className={`topic-pill ${selectedTopic === 'cicd-docker' ? 'active' : ''}`}
+            onClick={() => onSelectTopic('cicd-docker')}
+            title="CI/CD & Docker"
+          >
+            CI/CD & Docker
+          </button>
+        </div>
+      </div>
       <div className="sidebar-scroll">
         <ul className="chapter-list">
           {tree && tree.map(node => renderNode(node, 0))}

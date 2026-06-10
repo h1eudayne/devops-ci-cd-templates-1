@@ -31,6 +31,7 @@ export default function App() {
   const [theme, setTheme] = useState(loadTheme);
   const [expandedNodes, setExpandedNodes] = useState(new Set());
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedTopic, setSelectedTopic] = useState('all');
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   
   // Modals / Tooltips
@@ -126,20 +127,46 @@ export default function App() {
 
   // --- Search and Filter Tree ---
   const filteredTree = useMemo(() => {
-    if (!searchQuery.trim()) return rawData.tree;
-
     const query = searchQuery.toLowerCase().trim();
     const matches = new Set();
 
-    // Pass 1: Find all files/folders matching query, and collect their parents
-    const findMatches = (node, parentPaths = []) => {
+    // Helper to check if a file node matches the selected topic
+    const matchesQueryAndTopic = (node) => {
+      // 1. Topic Match
+      let topicMatch = false;
+      if (selectedTopic === 'all') {
+        topicMatch = true;
+      } else {
+        const path = (node.path || '').toLowerCase();
+        const name = (node.name || '').toLowerCase();
+        if (selectedTopic === 'system-design') {
+          topicMatch = path.startsWith('system-design');
+        } else if (selectedTopic === 'aws') {
+          topicMatch = path.startsWith('cloud/aws') || path.startsWith('cloud/aws/services') || name.includes('aws') || name.includes('ec2') || name.includes('s3') || name.includes('rds') || name.includes('elb') || name.includes('vpc') || name.includes('cloudfront') || name.includes('efs');
+        } else if (selectedTopic === 'kubernetes') {
+          topicMatch = path.includes('kubernetes') || path.includes('eks') || name.includes('kubernetes') || name.includes('eks');
+        } else if (selectedTopic === 'cicd-docker') {
+          topicMatch = path.startsWith('pipelines') || path.startsWith('dockerfiles') || path.includes('docker-compose') || path.includes('docker') || path.includes('jenkins');
+        }
+      }
+
+      if (!topicMatch) return false;
+
+      // 2. Search Query Match
+      if (!query) return true;
       const matchName = node.name.toLowerCase().includes(query);
       const matchTitle = node.title && node.title.toLowerCase().includes(query);
-      const nodeId = node.path || node.name;
+      return matchName || matchTitle;
+    };
 
-      if (node.type === 'file' && (matchName || matchTitle)) {
-        matches.add(nodeId);
-        parentPaths.forEach(p => matches.add(p));
+    // Pass 1: Find all files/folders matching criteria, and collect their parents
+    const findMatches = (node, parentPaths = []) => {
+      const nodeId = node.path || node.name;
+      if (node.type === 'file') {
+        if (matchesQueryAndTopic(node)) {
+          matches.add(nodeId);
+          parentPaths.forEach(p => matches.add(p));
+        }
       } else if (node.children) {
         node.children.forEach(child => {
           findMatches(child, [...parentPaths, nodeId]);
@@ -167,19 +194,25 @@ export default function App() {
         .filter(n => n !== null);
     };
 
-    // Auto expand search results
+    // Auto expand search results / topic filtering
     const newExpanded = new Set();
-    matches.forEach(p => {
-      if (p.includes('/')) {
-        newExpanded.add(p);
-      }
-    });
-    // Add all categories
-    rawData.tree.forEach(cat => newExpanded.add(cat.name));
-    setExpandedNodes(newExpanded);
+    if (selectedTopic !== 'all' || query) {
+      matches.forEach(p => {
+        if (p.includes('/')) {
+          newExpanded.add(p);
+        }
+      });
+      // Add all categories
+      rawData.tree.forEach(cat => {
+        if (matches.has(cat.name)) {
+          newExpanded.add(cat.name);
+        }
+      });
+      setExpandedNodes(newExpanded);
+    }
 
     return filterNodes(rawData.tree);
-  }, [searchQuery]);
+  }, [searchQuery, selectedTopic]);
 
   // --- Callbacks ---
   const handleSelectFile = useCallback((path) => {
@@ -349,6 +382,8 @@ export default function App() {
           expandedNodes={expandedNodes}
           onToggleExpand={handleToggleExpand}
           isOpen={mobileSidebarOpen}
+          selectedTopic={selectedTopic}
+          onSelectTopic={setSelectedTopic}
         />
 
         <ContentArea
