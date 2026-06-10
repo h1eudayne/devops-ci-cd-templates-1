@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 
 // Custom checkbox component to handle indeterminate state
 const TreeCheckbox = ({ checked, indeterminate, onChange, id }) => {
@@ -34,6 +34,25 @@ export default function Sidebar({
   selectedTopic,
   onSelectTopic
 }) {
+  const [topicSelectorExpanded, setTopicSelectorExpanded] = useState(false);
+
+  const getActiveTopicName = () => {
+    switch (selectedTopic) {
+      case 'all': return 'Tất cả tài liệu';
+      case 'system-design': return 'System Design';
+      case 'kubernetes': return 'Kubernetes';
+      case 'aws': return 'EC2 & AWS';
+      case 'cicd-docker': return 'CI/CD & Docker';
+      case 'glossary': return 'Từ điển Thuật ngữ';
+      case 'flashcard': return 'Thẻ Flashcard';
+      default: return 'Tất cả';
+    }
+  };
+
+  const handleSelectTopic = (topic) => {
+    onSelectTopic(topic);
+    setTopicSelectorExpanded(false);
+  };
 
   // Helper to determine if a node is a parent directory of active file (to auto-expand it)
   // Recursively check if a directory contains all completed files
@@ -198,57 +217,96 @@ export default function Sidebar({
   return (
     <aside className={`sidebar-left ${isOpen ? 'open' : ''}`} id="sidebar-left">
       <div className="sidebar-topic-selector">
-        <span className="selector-label">Chủ đề học tập</span>
-        <div className="topic-pills">
-          <button 
-            className={`topic-pill topic-pill-all ${selectedTopic === 'all' ? 'active' : ''}`}
-            onClick={() => onSelectTopic('all')}
+        <button 
+          className="selector-toggle-btn"
+          onClick={() => setTopicSelectorExpanded(!topicSelectorExpanded)}
+          aria-expanded={topicSelectorExpanded}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            width: '100%',
+            background: 'none',
+            border: 'none',
+            padding: '4px 0',
+            cursor: 'pointer',
+            color: 'var(--text-main)',
+            textAlign: 'left'
+          }}
+        >
+          <span className="selector-label" style={{ margin: 0, fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: '700', color: 'var(--text-muted)' }}>
+            Chủ đề: <span style={{ color: 'var(--accent)', textTransform: 'none', fontWeight: '600' }}>{getActiveTopicName()}</span>
+          </span>
+          <svg
+            className="chevron-icon"
+            viewBox="0 0 24 24"
+            width="14"
+            height="14"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            style={{ 
+              transform: topicSelectorExpanded ? 'rotate(0deg)' : 'rotate(-90deg)', 
+              transition: 'transform 0.2s ease',
+              color: 'var(--text-muted)'
+            }}
           >
-            Tất cả tài liệu
-          </button>
-          <button 
-            className={`topic-pill ${selectedTopic === 'system-design' ? 'active' : ''}`}
-            onClick={() => onSelectTopic('system-design')}
-            title="System Design"
-          >
-            System Design
-          </button>
-          <button 
-            className={`topic-pill ${selectedTopic === 'kubernetes' ? 'active' : ''}`}
-            onClick={() => onSelectTopic('kubernetes')}
-            title="Kubernetes"
-          >
-            Kubernetes
-          </button>
-          <button 
-            className={`topic-pill ${selectedTopic === 'aws' ? 'active' : ''}`}
-            onClick={() => onSelectTopic('aws')}
-            title="EC2 & AWS Cloud"
-          >
-            EC2 & AWS
-          </button>
-          <button 
-            className={`topic-pill ${selectedTopic === 'cicd-docker' ? 'active' : ''}`}
-            onClick={() => onSelectTopic('cicd-docker')}
-            title="CI/CD & Docker"
-          >
-            CI/CD & Docker
-          </button>
-          <button 
-            className={`topic-pill topic-pill-all ${selectedTopic === 'glossary' ? 'active' : ''}`}
-            onClick={() => onSelectTopic('glossary')}
-            title="Từ điển Thuật ngữ"
-          >
-            📕 Từ điển Thuật ngữ
-          </button>
-          <button 
-            className={`topic-pill topic-pill-all ${selectedTopic === 'flashcard' ? 'active' : ''}`}
-            onClick={() => onSelectTopic('flashcard')}
-            title="Thẻ Flashcard"
-          >
-            🎴 Thẻ Flashcard
-          </button>
-        </div>
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </button>
+
+        {topicSelectorExpanded && (
+          <div className="topic-pills" style={{ marginTop: '12px', animation: 'fadeIn 0.2s ease-out' }}>
+            <button 
+              className={`topic-pill topic-pill-all ${selectedTopic === 'all' ? 'active' : ''}`}
+              onClick={() => handleSelectTopic('all')}
+            >
+              Tất cả tài liệu
+            </button>
+            <button 
+              className={`topic-pill ${selectedTopic === 'system-design' ? 'active' : ''}`}
+              onClick={() => handleSelectTopic('system-design')}
+              title="System Design"
+            >
+              System Design
+            </button>
+            <button 
+              className={`topic-pill ${selectedTopic === 'kubernetes' ? 'active' : ''}`}
+              onClick={() => handleSelectTopic('kubernetes')}
+              title="Kubernetes"
+            >
+              Kubernetes
+            </button>
+            <button 
+              className={`topic-pill ${selectedTopic === 'aws' ? 'active' : ''}`}
+              onClick={() => handleSelectTopic('aws')}
+              title="EC2 & AWS Cloud"
+            >
+              EC2 & AWS
+            </button>
+            <button 
+              className={`topic-pill ${selectedTopic === 'cicd-docker' ? 'active' : ''}`}
+              onClick={() => handleSelectTopic('cicd-docker')}
+              title="CI/CD & Docker"
+            >
+              CI/CD & Docker
+            </button>
+            <button 
+              className={`topic-pill topic-pill-all ${selectedTopic === 'glossary' ? 'active' : ''}`}
+              onClick={() => handleSelectTopic('glossary')}
+              title="Từ điển Thuật ngữ"
+            >
+              📕 Từ điển Thuật ngữ
+            </button>
+            <button 
+              className={`topic-pill topic-pill-all ${selectedTopic === 'flashcard' ? 'active' : ''}`}
+              onClick={() => handleSelectTopic('flashcard')}
+              title="Thẻ Flashcard"
+            >
+              🎴 Thẻ Flashcard
+            </button>
+          </div>
+        )}
       </div>
       <div className="sidebar-scroll">
         <ul className="chapter-list">
