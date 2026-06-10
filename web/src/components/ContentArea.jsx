@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, memo, useState } from 'react';
 import { marked } from 'marked';
 import GlossaryExplorer from './GlossaryExplorer';
+import FlashcardExplorer from './FlashcardExplorer';
 
 // Helper to resolve relative path from base path
 function resolveRelativePath(basePath, relativePath) {
@@ -48,7 +49,8 @@ const ContentArea = memo(function ContentArea({
   onSelectFile,
   availablePaths = [],
   prevFile = null,
-  nextFile = null
+  nextFile = null,
+  activeFlashcardTerm = ''
 }) {
   const containerRef = useRef(null);
   const codeRef = useRef(null);
@@ -313,6 +315,8 @@ const ContentArea = memo(function ContentArea({
       <div className="content-wrapper">
         {activePath === 'glossary' ? (
           <GlossaryExplorer glossaryData={glossaryData} />
+        ) : activePath === 'flashcards' ? (
+          <FlashcardExplorer glossaryData={glossaryData} selectedTerm={activeFlashcardTerm} />
         ) : content ? (
           type === 'code' ? (
             <div className="code-viewer-container">
@@ -367,7 +371,7 @@ const ContentArea = memo(function ContentArea({
         )}
         
         
-        {activePath !== 'glossary' && content && (prevFile || nextFile) && (
+        {activePath !== 'glossary' && activePath !== 'flashcards' && content && (prevFile || nextFile) && (
           <div className="doc-pagination">
             {prevFile ? (
               <button 

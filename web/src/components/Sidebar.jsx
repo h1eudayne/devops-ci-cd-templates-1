@@ -241,6 +241,13 @@ export default function Sidebar({
           >
             📕 Từ điển Thuật ngữ
           </button>
+          <button 
+            className={`topic-pill topic-pill-all ${selectedTopic === 'flashcard' ? 'active' : ''}`}
+            onClick={() => onSelectTopic('flashcard')}
+            title="Thẻ Flashcard"
+          >
+            🎴 Thẻ Flashcard
+          </button>
         </div>
       </div>
       <div className="sidebar-scroll">
