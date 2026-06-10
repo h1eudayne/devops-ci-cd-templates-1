@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, memo, useState } from 'react';
 import { marked } from 'marked';
+import GlossaryExplorer from './GlossaryExplorer';
 
 // Helper to resolve relative path from base path
 function resolveRelativePath(basePath, relativePath) {
@@ -310,7 +311,9 @@ const ContentArea = memo(function ContentArea({
   return (
     <main className="content-panel" id="content-panel">
       <div className="content-wrapper">
-        {content ? (
+        {activePath === 'glossary' ? (
+          <GlossaryExplorer glossaryData={glossaryData} />
+        ) : content ? (
           type === 'code' ? (
             <div className="code-viewer-container">
               <div className="code-viewer-header">
@@ -363,7 +366,8 @@ const ContentArea = memo(function ContentArea({
           </div>
         )}
         
-        {content && (prevFile || nextFile) && (
+        
+        {activePath !== 'glossary' && content && (prevFile || nextFile) && (
           <div className="doc-pagination">
             {prevFile ? (
               <button 

@@ -234,6 +234,13 @@ export default function Sidebar({
           >
             CI/CD & Docker
           </button>
+          <button 
+            className={`topic-pill topic-pill-all ${selectedTopic === 'glossary' ? 'active' : ''}`}
+            onClick={() => onSelectTopic('glossary')}
+            title="Từ điển Thuật ngữ"
+          >
+            📕 Từ điển Thuật ngữ
+          </button>
         </div>
       </div>
       <div className="sidebar-scroll">

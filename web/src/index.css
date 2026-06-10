@@ -1327,4 +1327,210 @@ button {
   }
 }
 
+/* ----------------------------------------------------
+   Glossary Explorer Styles
+---------------------------------------------------- */
+.glossary-explorer {
+  padding: 10px;
+  animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.glossary-explorer-header {
+  margin-bottom: 32px;
+  text-align: left;
+}
+
+.glossary-title {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.glossary-subtitle {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-bottom: 24px;
+}
+
+.glossary-search-container {
+  position: relative;
+  max-width: 600px;
+  margin-bottom: 24px;
+}
+
+.glossary-search-icon {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  color: var(--text-muted);
+}
+
+.glossary-search-input {
+  width: 100%;
+  padding: 14px 16px 14px 48px;
+  font-size: 15px;
+  font-family: inherit;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-surface);
+  color: var(--text-main);
+  box-shadow: var(--shadow-sm);
+  transition: all 0.2s ease;
+}
+
+.glossary-search-input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-light);
+}
+
+.alphabet-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.alphabet-btn {
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-surface);
+  color: var(--text-main);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.alphabet-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background-color: var(--bg-surface-muted);
+}
+
+.alphabet-btn.active {
+  background-color: var(--accent);
+  border-color: var(--accent);
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.glossary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+  margin-top: 12px;
+}
+
+.glossary-card {
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-surface);
+  box-shadow: var(--shadow-sm);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  position: relative;
+  scroll-margin-top: 100px;
+}
+
+.glossary-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--accent);
+  box-shadow: var(--shadow-md);
+}
+
+.glossary-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.glossary-card-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-bright);
+}
+
+.glossary-card-copy {
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  transition: all 0.15s ease;
+}
+
+.glossary-card-copy:hover {
+  color: var(--accent);
+  background-color: var(--bg-surface-muted);
+}
+
+.glossary-card-badge {
+  display: flex;
+}
+
+.vi-badge {
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: 6px;
+  background-color: var(--accent-light);
+  color: var(--accent-text);
+  border: 1px solid rgba(99, 102, 241, 0.15);
+  display: inline-block;
+}
+
+.glossary-card-definition {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-muted);
+  flex-grow: 1;
+}
+
+.glossary-empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 64px 32px;
+  color: var(--text-muted);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+/* Flash Highlight when selected from sidebar */
+.glossary-card.highlight-flash {
+  animation: flashGlow 2s ease-out;
+}
+
+@keyframes flashGlow {
+  0% {
+    border-color: var(--accent);
+    box-shadow: 0 0 16px var(--accent);
+    background-color: var(--accent-light);
+  }
+  100% {
+    border-color: var(--border-color);
+    box-shadow: var(--shadow-sm);
+    background-color: var(--bg-surface);
+  }
+}
+
 
