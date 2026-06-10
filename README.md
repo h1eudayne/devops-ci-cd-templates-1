@@ -287,6 +287,44 @@ Phan `scenario` nen mo ta du 4 y:
 
 ---
 
+## Ứng dụng Web Đọc Tài Liệu (ReactJS Portal)
+
+Dự án tích hợp một ứng dụng Web ReactJS (Vite) trong thư mục `web/` giúp hiển thị toàn bộ nội dung của repository (System Design, Roadmaps, On-Premise, Cloud) dưới dạng tài liệu tương tác chuyên nghiệp.
+
+### Các tính năng nổi bật:
+- 🌳 **Dynamic Sidebar**: Cây thư mục đệ quy tự động hiển thị cấu trúc của repository, hỗ trợ thu gọn/mở rộng.
+- 🔍 **Tìm kiếm nhanh**: Tìm kiếm mọi tài liệu trên toàn bộ dự án theo tiêu đề và tên tệp tin.
+- 🖼️ **Image Zoomer**: Nhấp chuột vào sơ đồ bất kỳ để mở chế độ phóng to, thu nhỏ và kéo thả di chuyển.
+- 📚 **Glossary Tooltip**: Rê chuột lên các thuật ngữ kỹ thuật tiếng Anh để xem dịch nghĩa và định nghĩa tiếng Việt tức thì.
+- ✅ **Trình theo dõi tiến độ**: Đánh dấu hoàn thành cho từng chương hoặc từng phần nhỏ để lưu lại tiến trình học.
+
+### Hướng dẫn khởi chạy:
+
+1. Di chuyển vào thư mục `web/`:
+   ```bash
+   cd web
+   ```
+2. Cài đặt dependencies (chỉ cần chạy lần đầu):
+   ```bash
+   npm install
+   ```
+3. Chạy script để tự động quét toàn bộ repo, copy ảnh và build cơ sở dữ liệu `data.json` (chạy lại mỗi khi thêm hoặc chỉnh sửa tài liệu `.md` trong repo):
+   ```bash
+   python build_site_data.py
+   ```
+4. Khởi chạy server phát triển cục bộ:
+   ```bash
+   npm run dev
+   ```
+   *Truy cập địa chỉ hiển thị trên terminal (thường là `http://localhost:5173`) để trải nghiệm.*
+
+5. Đóng gói mã nguồn tĩnh để deploy:
+   ```bash
+   npm run build
+   ```
+
+---
+
 ## Cach them template moi
 
 1. **Xac dinh vi tri**: chon dung folder goc (`pipelines/`, `dockerfiles/`, `on-premise/`) theo loai tai nguyen.
