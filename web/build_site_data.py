@@ -37,6 +37,10 @@ def get_clean_title(content, default_name):
             return line
     return default_name
 
+def natural_sort_key(s):
+    """Splits a string into a list of numbers and strings for natural sorting."""
+    return [int(x) if x.isdigit() else x.lower() for x in re.split(r'(\d+)', s)]
+
 SUPPORTED_CODE_EXTS = ('.yml', '.yaml', '.conf', '.sh', '.Jenkinsfile', '.jenkinsfile', '.sql', '.properties', '.json', '.service', '.xml', '.example', '.ini')
 
 def get_code_language(filename):
@@ -139,7 +143,7 @@ def build_tree():
             }
             
             # Sort items to keep chapters/folders ordered
-            items = sorted(os.listdir(current_abs))
+            items = sorted(os.listdir(current_abs), key=natural_sort_key)
             
             for item in items:
                 item_abs = os.path.join(current_abs, item)
@@ -181,7 +185,7 @@ def build_tree():
                     })
                     
             # Sort children: directories first, then files
-            dir_node["children"].sort(key=lambda x: (0 if x["type"] == "directory" else 1, x["name"]))
+            dir_node["children"].sort(key=lambda x: (0 if x["type"] == "directory" else 1, natural_sort_key(x["name"])))
             return dir_node
             
         cat_tree = walk_dir(category_abs_path, category)
