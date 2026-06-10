@@ -98,6 +98,21 @@ export default function Sidebar({
       const isChecked = completionState === 'checked';
       const isIndeterminate = completionState === 'indeterminate';
 
+      // Parse and format directory names starting with numbers, and add 00. to Alex-Xu
+      const match = node.name.match(/^(\d+)/);
+      let dirNum = '';
+      let displayTitle = node.displayName || node.name;
+
+      if (node.name === 'Alex-Xu-System-Design-Interview') {
+        dirNum = '00.';
+        displayTitle = 'Alex Xu System Design Interview';
+      } else if (match) {
+        dirNum = `${match[1].padStart(2, '0')}.`;
+        displayTitle = displayTitle.replace(/^\d+\.\s*/, '').replace(/-/g, ' ');
+      } else if (depth > 0) {
+        displayTitle = displayTitle.replace(/-/g, ' ');
+      }
+
       return (
         <li key={nodeId} className="vol-section" style={{ marginLeft: depth > 0 ? '12px' : '0' }}>
           <div className="vol-header-wrapper" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -115,8 +130,9 @@ export default function Sidebar({
               onClick={() => onToggleExpand(nodeId)}
               style={{ flex: 1, textTransform: depth === 0 ? 'uppercase' : 'none', paddingLeft: '4px' }}
             >
-              <span className="vol-title" style={{ fontSize: depth === 0 ? '12px' : '13px', fontWeight: depth === 0 ? '700' : '600' }}>
-                {node.displayName || node.name}
+              <span className="vol-title" style={{ fontSize: depth === 0 ? '12px' : '13px', fontWeight: depth === 0 ? '700' : '600', display: 'flex', alignItems: 'baseline', gap: '6px' }}>
+                {dirNum && <span className="chapter-num" style={{ width: '24px' }}>{dirNum}</span>}
+                <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{displayTitle}</span>
               </span>
               <svg
                 className="chevron-icon"

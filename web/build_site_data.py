@@ -39,6 +39,8 @@ def get_clean_title(content, default_name):
 
 def natural_sort_key(s):
     """Splits a string into a list of numbers and strings for natural sorting."""
+    if s == 'Alex-Xu-System-Design-Interview':
+        return ['', 0, 'alex-xu-system-design-interview']
     return [int(x) if x.isdigit() else x.lower() for x in re.split(r'(\d+)', s)]
 
 SUPPORTED_CODE_EXTS = ('.yml', '.yaml', '.conf', '.sh', '.Jenkinsfile', '.jenkinsfile', '.sql', '.properties', '.json', '.service', '.xml', '.example', '.ini')
