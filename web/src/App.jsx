@@ -33,6 +33,7 @@ export default function App() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTopic, setSelectedTopic] = useState('all');
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
+  const [activeFlashcardTerm, setActiveFlashcardTerm] = useState('');
   
   // Modals / Tooltips
   const [zoomerImage, setZoomerImage] = useState(null); // { src, alt }
@@ -120,6 +121,31 @@ export default function App() {
             name: term,
             title: term,
             path: `glossary#glossary-card-${term.replace(/\s+/g, '-')}`,
+            type: 'file'
+          }))
+        }));
+    }
+
+    if (selectedTopic === 'flashcard') {
+      const termsGrouped = {};
+      Object.keys(rawData.glossary || {}).forEach(term => {
+        const letter = term.charAt(0).toUpperCase();
+        if (!termsGrouped[letter]) {
+          termsGrouped[letter] = [];
+        }
+        termsGrouped[letter].push(term);
+      });
+      
+      return Object.entries(termsGrouped)
+        .sort(([a], [b]) => a.localeCompare(b))
+        .map(([letter, terms]) => ({
+          name: letter,
+          path: `flashcards-${letter}`,
+          type: 'directory',
+          children: terms.sort().map(term => ({
+            name: term,
+            title: term,
+            path: `flashcards#${term}`,
             type: 'file'
           }))
         }));
@@ -257,6 +283,21 @@ export default function App() {
           return;
         }
 
+        // Flashcards route (with or without term)
+        if (decodedPath.startsWith('flashcards')) {
+          setActivePath('flashcards');
+          setSelectedTopic('flashcard');
+          
+          const hashIndex = decodedPath.indexOf('#');
+          if (hashIndex !== -1) {
+            const targetTerm = decodedPath.slice(hashIndex + 1);
+            setActiveFlashcardTerm(targetTerm);
+          } else {
+            setActiveFlashcardTerm('');
+          }
+          return;
+        }
+
         if (rawData.docs[decodedPath]) {
           setActivePath(decodedPath);
           // Auto-expand parent folders of active path
@@ -283,7 +324,10 @@ export default function App() {
     if (selectedTopic === 'glossary') {
       setActivePath('glossary');
       window.location.hash = '#glossary';
-    } else if (activePath === 'glossary') {
+    } else if (selectedTopic === 'flashcard') {
+      setActivePath('flashcards');
+      window.location.hash = '#flashcards';
+    } else if (activePath === 'glossary' || activePath === 'flashcards') {
       const firstFile = getFirstFilePath(filteredTree);
       if (firstFile) {
         setActivePath(firstFile);
@@ -518,6 +562,7 @@ export default function App() {
           availablePaths={useMemo(() => Object.keys(rawData.docs), [])}
           prevFile={prevFile}
           nextFile={nextFile}
+          activeFlashcardTerm={activeFlashcardTerm}
         />
 
         <Outline
