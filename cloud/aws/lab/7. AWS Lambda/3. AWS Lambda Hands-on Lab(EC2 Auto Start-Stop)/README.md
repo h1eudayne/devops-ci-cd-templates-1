@@ -116,6 +116,10 @@ Chúng ta sẽ sử dụng EventBridge Scheduler để cấu hình lịch biểu
      }
      ```
      *(Lưu ý: Thay thế `<ID_CUA_INSTANCE_CUA_BAN>` bằng Instance ID bạn đã copy ở Bước 1, ví dụ: `i-0317528f8970df364`)*.
+
+<p align="center">
+  <img src="../../../../../images/aws/lambda_ec2_scheduler_eventbridge_target.png" alt="Cấu hình Target Lambda và Payload JSON truyền tham số" width="750"/>
+</p>
 4. Tiếp tục nhấp **Next** qua các bước cấu hình Role cho Schedule, sau đó kiểm tra lại và nhấp **Create schedule** để hoàn tất.
 5. *(Tùy chọn)*: Để thiết lập tự động Bật máy chủ, bạn chỉ cần lặp lại các bước trên để tạo thêm một Schedule thứ hai với tên `Auto-Start-EC2-Test`, cấu hình giờ chạy tương ứng và truyền payload JSON:
    ```json
