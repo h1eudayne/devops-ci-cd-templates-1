@@ -163,16 +163,31 @@ Ta sẽ cấu hình S3 Event Notification để tự động gửi sự kiện k
   <img src="../../../../../images/aws/lambda_s3_resize_s3_create_event.png" alt="Khởi tạo Event Notification trên S3" width="750"/>
 </p>
 
-2. Tiến hành cấu hình chi tiết sự kiện:
-   * **Event name**: Điền tên gợi nhớ bất kỳ (ví dụ: `Process JPG Image`).
+2. Tiến hành cấu hình chi tiết sự kiện cho ảnh `.jpg`:
+   * **Event name**: Điền `Process JPG image`.
    * **Prefix**: Điền `images/` (để chỉ bắt sự kiện khi upload ảnh vào thư mục `images/`).
-   * **Suffix**: Điền `.jpg` (hoặc để trống để hỗ trợ nhiều định dạng).
+   * **Suffix**: Điền `.jpg`.
    * **Event types**: Tích chọn **All object create events**.
    * **Destination**: Chọn **Lambda function** $\rightarrow$ Chọn hàm Lambda `resize-image-lambda` của bạn từ danh sách xổ xuống (hoặc điền ARN trực tiếp).
 3. Nhấp nút **Save changes** để lưu lại cấu hình.
 
 <p align="center">
   <img src="../../../../../images/aws/lambda_s3_resize_s3_event_configuration.png" alt="Cấu hình thông số chi tiết cho S3 Event Trigger" width="750"/>
+</p>
+
+4. **Tạo tiếp Event notification cho ảnh `.png`**:
+   > [!IMPORTANT]
+   > Vì mỗi Event notification trong Amazon S3 chỉ cho phép cấu hình tối đa một Suffix (đuôi file), để Lambda tự động xử lý cho cả 2 định dạng ảnh phổ biến là `.jpg` và `.png`, bạn cần thực hiện lặp lại bước trên để tạo thêm một Event notification thứ hai:
+   > * **Event name**: Điền `Process PNG image`.
+   > * **Prefix**: Điền `images/`.
+   > * **Suffix**: Điền `.png`.
+   > * **Event types**: Tích chọn **All object create events**.
+   > * **Destination**: Chọn **Lambda function** $\rightarrow$ Chọn hàm Lambda `resize-image-lambda` của bạn.
+
+Sau khi hoàn tất, bạn sẽ thấy danh sách hiển thị **2 Event notifications** đã được thiết lập thành công như hình bên dưới:
+
+<p align="center">
+  <img src="../../../../../images/aws/lambda_s3_resize_s3_event_list.png" alt="Danh sách 2 Event notification cho JPG và PNG" width="750"/>
 </p>
 
 ---
