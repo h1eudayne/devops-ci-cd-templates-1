@@ -128,9 +128,9 @@ Các hướng dẫn thực hành viết code và cấu hình vận hành tự đ
 | File | Mô tả | Công nghệ |
 |------|-------|-----------|
 | [1. Hello Lambda (Làm quen với AWS Lambda Console)](7.%20AWS%20Lambda/1.%20Hello%20Lambda.md) | Thực hành tạo hàm Lambda đơn giản trả về Hello World, cấu hình sự kiện kiểm thử (Test Event) và thực thi kiểm nghiệm | AWS Lambda, Python, AWS Console |
-| [2. AWS Lambda Hands-on Lab(Resize Image on S3)](7.%20AWS%20Lambda/2.%20AWS%20Lambda%20Hands-on%20Lab%28Resize%20Image%20on%20S3%29.md) | Tự động co nhỏ kích thước ảnh (Thumbnail 300x300) khi có ảnh tải lên S3 bucket nguồn và upload ảnh kết quả lên S3 bucket đích | AWS Lambda, S3, IAM, Python (Pillow) |
-| [3. AWS Lambda Hands-on Lab(EC2 Auto Start-Stop)](7.%20AWS%20Lambda/3.%20AWS%20Lambda%20Hands-on%20Lab%28EC2%20Auto%20Start-Stop%29.md) | Lập lịch tự động bật/tắt các máy chủ EC2 có gắn thẻ tag chỉ định (ví dụ: Env: Dev) qua EventBridge Rules để tiết kiệm chi phí | AWS Lambda, EC2, EventBridge, Python (boto3) |
-| [4. AWS Lambda Hands-on Lab(Read CSV and Save to DynamoDB)](7.%20AWS%20Lambda/4.%20AWS%20Lambda%20Hands-on%20Lab%28Read%20CSV%20and%20Save%20to%20DynamoDB%29.md) | Tự động hóa quy trình ETL đọc tệp tin dữ liệu CSV từ S3, phân tích cú pháp và ghi trực tiếp các bản ghi vào bảng DynamoDB | AWS Lambda, S3, DynamoDB, Python (csv) |
+| [2. AWS Lambda Hands-on Lab(Resize Image on S3)](7.%20AWS%20Lambda/2.%20AWS%20Lambda%20Hands-on%20Lab%28Resize%20Image%20on%20S3%29/README.md) | Tự động co nhỏ kích thước ảnh (Thumbnail 300x300) khi có ảnh tải lên S3 bucket nguồn và upload ảnh kết quả lên S3 bucket đích | AWS Lambda, S3, IAM, Python (Pillow) |
+| [3. AWS Lambda Hands-on Lab(EC2 Auto Start-Stop)](7.%20AWS%20Lambda/3.%20AWS%20Lambda%20Hands-on%20Lab%28EC2%20Auto%20Start-Stop%29/README.md) | Lập lịch tự động bật/tắt các máy chủ EC2 có gắn thẻ tag chỉ định (ví dụ: Env: Dev) qua EventBridge Rules để tiết kiệm chi phí | AWS Lambda, EC2, EventBridge, Python (boto3) |
+| [4. AWS Lambda Hands-on Lab(Read CSV and Save to DynamoDB)](7.%20AWS%20Lambda/4.%20AWS%20Lambda%20Hands-on%20Lab%28Read%20CSV%20and%20Save%20to%20DynamoDB%29/README.md) | Tự động hóa quy trình ETL đọc tệp tin dữ liệu CSV từ S3, phân tích cú pháp và ghi trực tiếp các bản ghi vào bảng DynamoDB | AWS Lambda, S3, DynamoDB, Python (csv) |
 
 ---
 
@@ -181,9 +181,15 @@ cloud/aws/lab/
     2. Amazon DynamoDB Hands-on Lab(Index).md
   7. AWS Lambda/
     1. Hello Lambda.md
-    2. AWS Lambda Hands-on Lab(Resize Image on S3).md
-    3. AWS Lambda Hands-on Lab(EC2 Auto Start-Stop).md
-    4. AWS Lambda Hands-on Lab(Read CSV and Save to DynamoDB).md
+    2. AWS Lambda Hands-on Lab(Resize Image on S3)/
+      README.md
+      lambda_function.py
+    3. AWS Lambda Hands-on Lab(EC2 Auto Start-Stop)/
+      README.md
+      lambda_function.py
+    4. AWS Lambda Hands-on Lab(Read CSV and Save to DynamoDB)/
+      README.md
+      lambda_function.py
   README.md
 ```
 

@@ -179,5 +179,5 @@ Chúng ta sẽ tạo 2 Rule trên EventBridge để tự động kích hoạt La
 
 ---
 
-* **Bài trước**: [2. AWS Lambda Hands-on Lab(Resize Image on S3) (Lab Resize ảnh trên S3)](2.%20AWS%20Lambda%20Hands-on%20Lab%28Resize%20Image%20on%20S3%29.md)
-* **Bài tiếp theo**: [4. AWS Lambda Hands-on Lab(Read CSV and Save to DynamoDB) (Lab đọc CSV lưu vào DynamoDB)](4.%20AWS%20Lambda%20Hands-on%20Lab%28Read%20CSV%20and%20Save%20to%20DynamoDB%29.md)
+* **Bài trước**: [2. AWS Lambda Hands-on Lab(Resize Image on S3) (Lab Resize ảnh trên S3)](../2.%20AWS%20Lambda%20Hands-on%20Lab%28Resize%20Image%20on%20S3%29/README.md)
+* **Bài tiếp theo**: [4. AWS Lambda Hands-on Lab(Read CSV and Save to DynamoDB) (Lab đọc CSV lưu vào DynamoDB)](../4.%20AWS%20Lambda%20Hands-on%20Lab%28Read%20CSV%20and%20Save%20to%20DynamoDB%29/README.md)
