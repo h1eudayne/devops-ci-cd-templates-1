@@ -160,5 +160,5 @@ Chúng ta sẽ sử dụng thư viện tiêu chuẩn `csv` và `codecs` có sẵ
 
 ---
 
-* **Bài trước**: [3. AWS Lambda Hands-on Lab(EC2 Auto Start-Stop) (Lab bật tắt EC2 tự động)](3.%20AWS%20Lambda%20Hands-on%20Lab%28EC2%20Auto%20Start-Stop%29.md)
-* **Bài tiếp theo**: [8. EKS (Elastic Kubernetes Service)](../../services/8.%20EKS.md)
+* **Bài trước**: [3. AWS Lambda Hands-on Lab(EC2 Auto Start-Stop) (Lab bật tắt EC2 tự động)](../3.%20AWS%20Lambda%20Hands-on%20Lab%28EC2%20Auto%20Start-Stop%29/README.md)
+* **Bài tiếp theo**: [8. EKS (Elastic Kubernetes Service)](../../../services/8.%20EKS.md)
