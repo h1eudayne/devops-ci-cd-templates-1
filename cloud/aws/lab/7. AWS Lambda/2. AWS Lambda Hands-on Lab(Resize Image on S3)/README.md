@@ -128,20 +128,56 @@ Vì môi trường Python của AWS Lambda không tích hợp sẵn thư viện 
 
 ---
 
-### Bước 8: Cấu hình S3 Event Trigger
+### Bước 8: Cấu hình IAM Role cho Lambda
 
-1. Tại giao diện Lambda, nhấp chọn **Add trigger** ở phần Function overview.
-2. Chọn dịch vụ **S3**.
-3. **Bucket**: Chọn S3 bucket bạn đã tạo ở Bước 1.
-4. **Event type**: Chọn **All object create events**.
-5. **Prefix**: Điền `images/` (chỉ kích hoạt khi upload vào thư mục này).
-6. **Suffix**: Điền `.jpg` (hoặc để trống để hỗ trợ nhiều định dạng ảnh).
-7. Tích chọn hộp thoại xác nhận cảnh báo gọi đệ quy (Recursive invocation).
-8. Nhấp chọn **Add**.
+Để hàm Lambda có đủ quyền truy cập đọc/ghi file từ dịch vụ Amazon S3, ta cần cấp thêm quyền cho Execution Role của Lambda:
+
+1. Tại giao diện quản trị hàm Lambda, chuyển sang tab **Configuration** $\rightarrow$ Chọn mục **Permissions** từ danh sách menu bên trái.
+2. Tại khu vực **Execution role**, nhấp chọn vào link đường dẫn của Role Name để chuyển hướng sang IAM Console.
+
+<p align="center">
+  <img src="../../../../../images/aws/lambda_s3_resize_iam_role_link.png" alt="Mở đường dẫn quản lý IAM Role" width="750"/>
+</p>
+
+3. Tại giao diện IAM Role Console, click nút **Add permissions** và chọn **Attach policies**.
+
+<p align="center">
+  <img src="../../../../../images/aws/lambda_s3_resize_iam_attach_policy.png" alt="Chọn Attach policy cho IAM Role" width="750"/>
+</p>
+
+4. Nhập từ khóa tìm kiếm `AmazonS3FullAccess` (hoặc cấu hình Custom Policy chỉ cho phép GetObject và PutObject lên bucket chỉ định), tích chọn policy đó và nhấp **Add permissions** để hoàn thành.
+
+<p align="center">
+  <img src="../../../../../images/aws/lambda_s3_resize_iam_search_s3_policy.png" alt="Tìm kiếm và add policy AmazonS3FullAccess" width="750"/>
+</p>
 
 ---
 
-### Bước 9: Chạy thử và Kiểm nghiệm kết quả (Test)
+### Bước 9: Thiết lập Trigger từ Amazon S3 cho thư mục `images/`
+
+Ta sẽ cấu hình S3 Event Notification để tự động gửi sự kiện kích hoạt Lambda khi có ảnh tải lên:
+
+1. Truy cập **Amazon S3 Console** $\rightarrow$ Click vào Bucket của bạn $\rightarrow$ Chọn tab **Properties** $\rightarrow$ Cuộn xuống mục **Event notifications** $\rightarrow$ Click chọn nút **Create event notification**.
+
+<p align="center">
+  <img src="../../../../../images/aws/lambda_s3_resize_s3_create_event.png" alt="Khởi tạo Event Notification trên S3" width="750"/>
+</p>
+
+2. Tiến hành cấu hình chi tiết sự kiện:
+   * **Event name**: Điền tên gợi nhớ bất kỳ (ví dụ: `Process JPG Image`).
+   * **Prefix**: Điền `images/` (để chỉ bắt sự kiện khi upload ảnh vào thư mục `images/`).
+   * **Suffix**: Điền `.jpg` (hoặc để trống để hỗ trợ nhiều định dạng).
+   * **Event types**: Tích chọn **All object create events**.
+   * **Destination**: Chọn **Lambda function** $\rightarrow$ Chọn hàm Lambda `resize-image-lambda` của bạn từ danh sách xổ xuống (hoặc điền ARN trực tiếp).
+3. Nhấp nút **Save changes** để lưu lại cấu hình.
+
+<p align="center">
+  <img src="../../../../../images/aws/lambda_s3_resize_s3_event_configuration.png" alt="Cấu hình thông số chi tiết cho S3 Event Trigger" width="750"/>
+</p>
+
+---
+
+### Bước 10: Chạy thử và Kiểm nghiệm kết quả (Test)
 
 1. Tải một file ảnh có định dạng `.jpg` hoặc `.png` lên thư mục `images/` trong S3 Bucket của bạn. *Lưu ý: Tên ảnh không nên chứa ký tự đặc biệt!*
 2. Kiểm tra log thực thi của hàm Lambda trong **CloudWatch Logs** để xác minh quá trình xử lý hoàn tất.
@@ -152,6 +188,7 @@ Vì môi trường Python của AWS Lambda không tích hợp sẵn thư viện 
    * `resized_1000/`
 
 ---
+
 
 ## Các lỗi thường gặp và Cách khắc phục (Troubleshooting)
 
