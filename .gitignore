@@ -6,3 +6,6 @@ Thumbs.db
 dist/
 build/
 node_modules/
+python/
+*.zip
+

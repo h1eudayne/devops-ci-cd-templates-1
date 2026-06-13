@@ -2,130 +2,150 @@
 
 👉 **[Xem Đề bài / Yêu cầu bài Lab](2.%20AWS%20Lambda%20Hands-on%20Lab%28Resize%20Image%20on%20S3%29.md)**
 
+---
+
 ## Các bước thực hiện chi tiết
 
-### Bước 1: Tạo S3 Bucket
+### Bước 1: Tạo S3 Bucket và Thư mục chứa ảnh
 
-Khởi tạo một S3 Bucket trên AWS Console. Bucket này sẽ được cấu hình để gửi sự kiện (Trigger) kích hoạt hàm Lambda khi có tệp tin hình ảnh mới được upload lên.
+1. Truy cập **Amazon S3 Console**.
+2. Nhấp chọn **Create bucket**, tạo một bucket mới với tên bất kỳ (ví dụ: `h1eudayne-images-bucket`).
+3. Truy cập vào bucket vừa tạo, chọn **Create folder** và tạo một thư mục tên là `images` để chứa các tệp tin hình ảnh tải lên.
 
 ---
 
-### Bước 2: Chuẩn bị Lambda Layer chứa thư viện Pillow
+### Bước 2: Tạo Lambda Layer (Sử dụng Git Bash / Powershell)
+
+Vì môi trường Python của AWS Lambda không tích hợp sẵn thư viện xử lý ảnh **Pillow (PIL)**, chúng ta cần tạo một Lambda Layer chứa thư viện này để nhúng vào hàm.
 
 > [!IMPORTANT]
-> Thư viện **Pillow** cần phải được biên dịch (build) tương thích với hệ điều hành **Amazon Linux 2** (môi trường chạy của Lambda), không phải Windows hay macOS. Nếu cài đặt không đúng môi trường chạy, bạn sẽ gặp lỗi sau:
-> ```text
-> [ERROR] Runtime.ImportModuleError: Unable to import module 'lambda_function': 
-> cannot import name '_imaging' from 'PIL'
-> ```
+> Thư viện **Pillow** phải được tải xuống và biên dịch tương thích với hệ điều hành **Amazon Linux 2** (Runtime của Lambda trên cloud) thay vì môi trường local như Windows hay macOS.
 
-Để đóng gói Layer tương thích, thực hiện theo các bước sau:
+1. Mở **Git Bash** hoặc **PowerShell** tại thư mục dự án của bạn.
+2. Tạo thư mục tên là `python` để lưu trữ thư viện:
+   ```bash
+   mkdir python
+   ```
+3. Chạy lệnh cài đặt Pillow chỉ định nền tảng (platform) và runtime Python tương thích (ví dụ: Python 3.12):
 
-#### 1. Tạo thư mục `python`
-```bash
-mkdir python
-```
+   * **Trên Git Bash / Linux (Lệnh 1 dòng):**
+     ```bash
+     pip install Pillow --platform manylinux2014_x86_64 --target python --implementation cp --python-version 3.12 --only-binary=:all: --no-deps --upgrade
+     ```
+   * **Trên PowerShell (Lệnh nhiều dòng):**
+     ```powershell
+     pip install Pillow `
+         --platform manylinux2014_x86_64 `
+         --target python `
+         --implementation cp `
+         --python-version 3.12 `
+         --only-binary=:all: `
+         --no-deps `
+         --upgrade
+     ```
 
-#### 2. Cài đặt thư viện Pillow chỉ định platform và runtime tương thích
-
-**Sử dụng Bash / Git Bash / WSL (Lệnh viết trên 1 dòng):**
-```bash
-pip install Pillow --platform manylinux2014_x86_64 --target python --implementation cp --python-version 3.12 --only-binary=:all: --no-deps --upgrade
-```
-
-**Sử dụng PowerShell (Lệnh viết trên nhiều dòng):**
-```powershell
-pip install Pillow `
-    --platform manylinux2014_x86_64 `
-    --target python `
-    --implementation cp `
-    --python-version 3.12 `
-    --only-binary=:all: `
-    --no-deps `
-    --upgrade
-```
-
-#### 3. Nén thư mục thành file zip
-Nén thư mục `python` vừa tạo thành tệp tin `python.zip`.
-
-#### 4. Upload Layer lên AWS Lambda
-1. Truy cập giao diện **AWS Lambda Console** $\rightarrow$ **Layers** $\rightarrow$ **Create layer**.
-2. Thiết lập cấu hình:
-   * **Name**: `python-pillow-layer`.
-   * **Upload**: Chọn tải lên tệp `python.zip`.
-   * **Compatible architectures**: Tích chọn `x86_64`.
-   * **Compatible runtimes**: Chọn `Python 3.12`.
-3. Nhấp chọn **Create**.
+<p align="center">
+  <img src="../../../../../images/aws/lambda_s3_resize_vscode_pip.png" alt="Cài đặt Pillow tương thích Linux" width="750"/>
+</p>
 
 ---
 
-### Bước 3: Tạo Lambda Function
+### Bước 3: Nén zip thư mục python vừa tạo
 
-1. Truy cập **AWS Lambda Console** $\rightarrow$ **Create function**.
-2. Thiết lập các thông số:
+1. Sau khi cài đặt xong, bạn sẽ thấy thư mục `python` chứa các thư mục con `PIL`, `pillow_libs`, và metadata.
+2. Thực hiện nén thư mục `python` này thành tệp tin `python.zip` (dung lượng sau khi nén khoảng 8.5 MB).
+
+---
+
+### Bước 4: Tải lên Layer lên Lambda
+
+1. Truy cập **AWS Lambda Console** $\rightarrow$ Chọn mục **Layers** ở danh sách menu bên trái.
+
+<p align="center">
+  <img src="../../../../../images/aws/lambda_s3_resize_layers_list.png" alt="Danh sách Layers trên Lambda Console" width="750"/>
+</p>
+
+2. Nhấp nút **Create layer** ở phía bên phải màn hình.
+3. Cấu hình thông tin Layer:
+   * **Name**: `python-pillow-layer`.
+   * **Upload**: Tải lên tệp tin `python.zip` đã chuẩn bị ở Bước 3.
+   * **Compatible architectures**: Chọn `x86_64`.
+   * **Compatible runtimes**: Chọn `Python 3.12` (và có thể chọn thêm `Python 3.13`).
+4. Nhấp chọn **Create**.
+
+<p align="center">
+  <img src="../../../../../images/aws/lambda_s3_resize_create_layer.png" alt="Cấu hình khởi tạo Lambda Layer" width="750"/>
+</p>
+
+---
+
+### Bước 5: Tạo Lambda Function
+
+1. Truy cập **AWS Lambda Console** $\rightarrow$ **Functions** $\rightarrow$ **Create function**.
+2. Cấu hình các thông số cơ bản:
+   * Chọn **Author from scratch** (Tự viết từ đầu).
    * **Function name**: `resize-image-lambda`.
    * **Runtime**: Chọn **Python 3.12**.
    * **Architecture**: Chọn **x86_64**.
 3. Nhấp chọn **Create function**.
 
----
-
-### Bước 4: Thêm Layer vào Lambda Function
-
-1. Tại giao diện chi tiết của hàm Lambda vừa tạo, cuộn xuống dưới cùng đến mục **Layers**.
-2. Nhấp nút **Add a layer**.
-3. Chọn **Custom layers**.
-4. Tìm và chọn `python-pillow-layer` với version mới nhất bạn vừa tạo ở Bước 2.
-5. Nhấp chọn **Add**.
+<p align="center">
+  <img src="../../../../../images/aws/lambda_s3_resize_create_function.png" alt="Khởi tạo Lambda Function" width="750"/>
+</p>
 
 ---
 
-### Bước 5: Cấu hình mã nguồn và tài nguyên cho Lambda
+### Bước 6: Liên kết Layer và Cấu hình Function
 
-1. Cập nhật mã nguồn trong tệp `lambda_function.py` bằng nội dung từ file [lambda_function.py](lambda_function.py).
-2. Tăng thời gian chạy tối đa (Timeout): Chọn tab **Configuration** $\rightarrow$ **General configuration** $\rightarrow$ **Edit** $\rightarrow$ Thiết lập **Timeout** tối thiểu là **30 giây** (mặc định là 3 giây, có thể bị hết thời gian khi xử lý ảnh lớn).
-3. Tăng dung lượng bộ nhớ (Memory): Thiết lập **Memory** tối thiểu là **512 MB** để cải thiện tốc độ xử lý ảnh của Pillow.
+#### 1. Thêm Layer Pillow vào Function
+1. Tại giao diện quản lý hàm `resize-image-lambda`, cuộn xuống dưới cùng đến mục **Layers**.
+2. Nhấp chọn **Add a layer** $\rightarrow$ Chọn **Custom layers**.
+3. Tìm và chọn Layer `python-pillow-layer` với phiên bản vừa tạo ở Bước 4. Nhấn **Add**.
+
+#### 2. Cấu hình quyền truy cập (IAM Role) và tài nguyên (RAM/Timeout)
+1. Để Lambda đọc và ghi tệp tin lên S3, hãy đảm bảo Execution Role của hàm có quyền `s3:GetObject` và `s3:PutObject`.
+2. Tăng cấu hình tài nguyên: Chuyển sang tab **Configuration** $\rightarrow$ **General configuration** $\rightarrow$ **Edit**:
+   * **Memory**: Thiết lập tối thiểu **512 MB** (để Pillow xử lý ảnh mượt mà).
+   * **Timeout**: Tăng lên tối thiểu **30 giây** (tránh bị timeout khi xử lý ảnh dung lượng lớn).
+
+#### 3. Cập nhật mã nguồn Lambda
+1. Mở file `lambda_function.py` trong tab **Code** và dán đoạn mã nguồn sau (lấy từ [lambda_function.py](lambda_function.py)):
+   ```python
+   # Xem nội dung đầy đủ ở tệp lambda_function.py cùng thư mục
+   ```
+2. Nhấn nút **Deploy** để áp dụng thay đổi.
 
 ---
 
-### Bước 6: Cấu hình S3 Trigger
+### Bước 7: Cấu hình S3 Event Trigger và chạy thử
 
-1. Tại giao diện Lambda, nhấp chọn **Add trigger** ở phần Function overview.
-2. Chọn dịch vụ **S3**.
-3. **Bucket**: Chọn S3 bucket bạn đã tạo ở Bước 1.
-4. **Event type**: Chọn **All object create events**.
-5. **Prefix**: Điền `images/` (chỉ kích hoạt khi upload vào thư mục này).
-6. **Suffix**: Điền `.jpg` (hoặc để trống để hỗ trợ nhiều định dạng ảnh).
-7. Tích chọn hộp thoại xác nhận cảnh báo gọi đệ quy (Recursive invocation).
-8. Nhấp chọn **Add**.
-
----
-
-### Bước 7: Chạy thử và Kiểm nghiệm kết quả (Test)
-
-1. Tải một file ảnh có định dạng `.jpg` lên thư mục `images/` trong S3 Bucket của bạn. *Lưu ý: Tên ảnh không nên chứa ký tự đặc biệt!*
-2. Kiểm tra log thực thi của hàm Lambda trong **CloudWatch Logs**.
-3. Xác nhận các thư mục con sau tự động được tạo và chứa các phiên bản ảnh đã resize tương ứng:
-   * `resized_100/`
-   * `resized_200/`
-   * `resized_500/`
-   * `resized_1000/`
+1. Nhấp chọn **Add trigger** ở phần Function overview của Lambda Console.
+2. Chọn **S3** làm Trigger source:
+   * **Bucket**: Chọn S3 bucket của bạn.
+   * **Event types**: Chọn **All object create events**.
+   * **Prefix**: Điền `images/`.
+   * Hộp thoại cảnh báo gọi đệ quy: Tích chọn đồng ý (Acknowledge).
+3. Nhấp chọn **Add**.
+4. **Kiểm nghiệm**:
+   * Tải một ảnh `.jpg` bất kỳ lên thư mục `images/` trong S3 Bucket của bạn.
+   * Truy cập lại S3 Bucket, kiểm tra các thư mục tự động được tạo: `resized_100/`, `resized_200/`, `resized_500/`, `resized_1000/`.
+   * Kiểm tra log thực thi trên **CloudWatch Logs** để xác nhận kết quả xử lý thành công.
 
 ---
 
 ## Các lỗi thường gặp và Cách khắc phục (Troubleshooting)
 
 ### 1. Lỗi: "cannot import name '_imaging' from 'PIL'"
-* **Nguyên nhân**: Thư viện Pillow được nén và đóng gói trên môi trường Windows hoặc macOS, dẫn đến thiếu hoặc không tương thích các thư viện liên kết động C (C extensions) trên Amazon Linux.
-* **Cách khắc phục**: Xóa Layer cũ và đóng gói lại tệp zip bằng lệnh pip chứa tham số `--platform manylinux2014_x86_64` như hướng dẫn ở Bước 2.
+* **Nguyên nhân**: Thư viện Pillow được tải xuống trên Windows/macOS không tương thích với nhân Linux trên Lambda.
+* **Cách khắc phục**: Hãy chắc chắn sử dụng đúng lệnh `pip install Pillow` có tham số `--platform manylinux2014_x86_64` ở Bước 2.
 
 ### 2. Lỗi: "Task timed out"
-* **Nguyên nhân**: Thời gian xử lý ảnh dung lượng lớn vượt quá cấu hình mặc định (3 giây) của Lambda.
-* **Cách khắc phục**: Tăng cấu hình timeout của Lambda lên 30 - 60 giây trong Configuration.
+* **Nguyên nhân**: Thời gian thực thi mặc định (3 giây) quá ngắn để xử lý tải và nén ảnh.
+* **Cách khắc phục**: Hãy tăng cấu hình timeout của Lambda lên 30 - 60 giây trong Configuration.
 
 ### 3. Lỗi: "Memory limit exceeded"
-* **Nguyên nhân**: Bộ nhớ RAM mặc định (128 MB) không đủ để Pillow load và xử lý ảnh lớn.
-* **Cách khắc phục**: Tăng bộ nhớ RAM cấu hình của Lambda lên ít nhất 512 MB.
+* **Nguyên nhân**: Bộ nhớ mặc định (128 MB) không đủ để xử lý ảnh độ phân giải cao.
+* **Cách khắc phục**: Tăng cấu hình Memory lên tối thiểu 512 MB trong Configuration.
 
 ---
 
