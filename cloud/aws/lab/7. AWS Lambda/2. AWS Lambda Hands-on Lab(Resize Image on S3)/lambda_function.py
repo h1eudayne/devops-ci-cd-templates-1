@@ -1,36 +1,79 @@
 import boto3
 import os
-import uuid
-from urllib.parse import unquote_plus
 from PIL import Image
+from io import BytesIO
+import json
+client = boto3.client('s3')
 
-s3_client = boto3.client('s3')
-
-def resize_image(image_path, resized_path):
-    with Image.open(image_path) as image:
-        # Co nhỏ ảnh giữ nguyên tỉ lệ, tối đa 300px cho chiều rộng/cao
-        image.thumbnail((300, 300))
-        image.save(resized_path)
-
+def resize_image(src_bucket, src_key, des_bucket, des_key, max_size):
+    """
+    Resize image while maintaining aspect ratio.
+    The longest edge will be resized to max_size, and the other edge will be scaled proportionally.
+    
+    Args:
+        src_bucket: Source S3 bucket name
+        src_key: Source object key
+        des_bucket: Destination S3 bucket name
+        des_key: Destination object key
+        max_size: Maximum size for the longest edge (int)
+    """
+    in_mem_file = BytesIO()
+    
+    # Get the image from S3
+    file_byte_string = client.get_object(Bucket=src_bucket, Key=src_key)['Body'].read()
+    im = Image.open(BytesIO(file_byte_string))
+    
+    # Get original dimensions
+    original_width, original_height = im.size
+    print(f'Original size: {original_width}x{original_height}')
+    
+    # Calculate new dimensions maintaining aspect ratio
+    # thumbnail() resizes based on the longest edge while maintaining aspect ratio
+    im.thumbnail((max_size, max_size), Image.Resampling.LANCZOS)
+    
+    # Get new dimensions after resize
+    new_width, new_height = im.size
+    print(f'Resized to: {new_width}x{new_height} (max edge: {max_size})')
+    
+    # Save the resized image
+    im.save(in_mem_file, format=im.format)
+    in_mem_file.seek(0)
+        
+    # save to new folder in S3.
+    response = client.put_object(
+        Body=in_mem_file,
+        Bucket=des_bucket,
+        Key=des_key
+    )
+        
 def lambda_handler(event, context):
-    for record in event['Records']:
-        # Lấy thông tin Bucket nguồn và Tên ảnh từ sự kiện
-        source_bucket = record['s3']['bucket']['name']
-        image_key = unquote_plus(record['s3']['object']['key'])
+    #For debug only
+    print('bucket name is:\n')
+    print(event['Records'][0]['s3']['bucket']['name'])
+    print('object key is:\n')
+    print(event['Records'][0]['s3']['object']['key'])
+
+    # Define maximum sizes for the longest edge
+    max_size_1000 = 1000
+    max_size_500 = 500
+    max_size_200 = 200
+    max_size_100 = 100
+    
+    for obj in event['Records']:
+        bucket_name = obj['s3']['bucket']['name']
+        object_key = obj['s3']['object']['key']
         
-        # Tạo tên file tạm thời trong thư mục /tmp của Lambda
-        temp_file_name = f"{uuid.uuid4()}-{os.path.basename(image_key)}"
-        download_path = f"/tmp/{temp_file_name}"
-        upload_path = f"/tmp/resized-{temp_file_name}"
+        print(f'Resizing file: {bucket_name}/{object_key}')
         
-        # 1. Tải ảnh từ S3 Bucket Nguồn về /tmp
-        s3_client.download_file(source_bucket, image_key, download_path)
-        
-        # 2. Thực hiện Resize ảnh sử dụng thư viện Pillow
-        resize_image(download_path, upload_path)
-        
-        # 3. Định nghĩa S3 Bucket đích và Upload ảnh lên
-        target_bucket = source_bucket.replace("-source", "-resized")
-        s3_client.upload_file(upload_path, target_bucket, image_key)
-        
-        print(f"Thành công! Đã resize {image_key} từ {source_bucket} sang {target_bucket}")
+        # Resize to different sizes while maintaining aspect ratio
+        resize_image(bucket_name, object_key, bucket_name, 'resized_1000/' + object_key, max_size_1000)
+        resize_image(bucket_name, object_key, bucket_name, 'resized_500/' + object_key, max_size_500)
+        resize_image(bucket_name, object_key, bucket_name, 'resized_200/' + object_key, max_size_200)
+        resize_image(bucket_name, object_key, bucket_name, 'resized_100/' + object_key, max_size_100)
+    
+        print('Resize completed!')
+
+    return {
+        'statusCode': 200,
+        'body': json.dumps('Process completed!')
+    }

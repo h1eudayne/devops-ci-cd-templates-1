@@ -1,15 +1,6 @@
-# 4. AWS Lambda Hands-on Lab (Đọc tệp CSV từ S3 và lưu vào DynamoDB)
+# 4. AWS Lambda Hands-on Lab (Đọc tệp CSV từ S3 và lưu vào DynamoDB) - Hướng dẫn chi tiết
 
-## I. Tổng quan bài Lab
-
-Quy trình ETL (Extract - Transform - Load) dữ liệu dạng tệp tin vào cơ sở dữ liệu là tác vụ vô cùng phổ biến trong thực tế.
-
-Bài Lab này hướng dẫn bạn xây dựng giải pháp tự động hóa:
-1. Khi có một tệp định dạng `.csv` chứa danh sách học sinh được upload lên **Amazon S3**.
-2. **S3 Event Notification** tự động kích hoạt **AWS Lambda Function**.
-3. Lambda Function tải tệp CSV dưới dạng Stream, đọc nội dung từng dòng, phân tách dữ liệu và ghi trực tiếp vào cơ sở dữ liệu NoSQL **Amazon DynamoDB**.
-
----
+👉 **[Xem Đề bài / Yêu cầu bài Lab](4.%20AWS%20Lambda%20Hands-on%20Lab%28Read%20CSV%20and%20Save%20to%20DynamoDB%29.md)**
 
 ## II. Các bước thực hiện chi tiết
 
@@ -162,3 +153,7 @@ Chúng ta sẽ sử dụng thư viện tiêu chuẩn `csv` và `codecs` có sẵ
 
 * **Bài trước**: [3. AWS Lambda Hands-on Lab(EC2 Auto Start-Stop) (Lab bật tắt EC2 tự động)](../3.%20AWS%20Lambda%20Hands-on%20Lab%28EC2%20Auto%20Start-Stop%29/README.md)
 * **Bài tiếp theo**: [8. EKS (Elastic Kubernetes Service)](../../../services/8.%20EKS.md)
+
+---
+
+👉 **[Quay lại Đề bài](4.%20AWS%20Lambda%20Hands-on%20Lab%28Read%20CSV%20and%20Save%20to%20DynamoDB%29.md)**

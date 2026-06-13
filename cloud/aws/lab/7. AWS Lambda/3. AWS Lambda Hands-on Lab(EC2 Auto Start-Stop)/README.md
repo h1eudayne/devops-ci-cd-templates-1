@@ -1,16 +1,6 @@
-# 3. AWS Lambda Hands-on Lab (Tự động bật/tắt máy chủ EC2 để tiết kiệm chi phí)
+# 3. AWS Lambda Hands-on Lab (Tự động bật/tắt máy chủ EC2 để tiết kiệm chi phí) - Hướng dẫn chi tiết
 
-## I. Tổng quan bài Lab
-
-Trong môi trường phát triển (Development / Testing), các máy chủ ảo EC2 thường chỉ cần hoạt động trong giờ làm việc hành chính (ví dụ: 08:00 đến 18:00). Việc để máy chủ chạy 24/7 qua đêm và cuối tuần gây lãng phí tài nguyên rất lớn.
-
-Bài Lab này hướng dẫn bạn cấu hình giải pháp tự động hóa:
-1. **AWS Lambda** sử dụng bộ thư viện AWS SDK cho Python (`boto3`) để truy vấn và ra lệnh Bật/Tắt các máy chủ EC2 có gắn thẻ tag cụ thể (ví dụ: `Env: Dev`).
-2. **Amazon EventBridge** lập lịch chạy định kỳ (Cron Job) kích hoạt Lambda tự động:
-   * **Stop** cụm EC2 Dev vào **19:00** hàng ngày.
-   * **Start** cụm EC2 Dev vào **07:00** sáng hôm sau.
-
----
+👉 **[Xem Đề bài / Yêu cầu bài Lab](3.%20AWS%20Lambda%20Hands-on%20Lab%28EC2%20Auto%20Start-Stop%29.md)**
 
 ## II. Các bước thực hiện chi tiết
 
@@ -181,3 +171,7 @@ Chúng ta sẽ tạo 2 Rule trên EventBridge để tự động kích hoạt La
 
 * **Bài trước**: [2. AWS Lambda Hands-on Lab(Resize Image on S3) (Lab Resize ảnh trên S3)](../2.%20AWS%20Lambda%20Hands-on%20Lab%28Resize%20Image%20on%20S3%29/README.md)
 * **Bài tiếp theo**: [4. AWS Lambda Hands-on Lab(Read CSV and Save to DynamoDB) (Lab đọc CSV lưu vào DynamoDB)](../4.%20AWS%20Lambda%20Hands-on%20Lab%28Read%20CSV%20and%20Save%20to%20DynamoDB%29/README.md)
+
+---
+
+👉 **[Quay lại Đề bài](3.%20AWS%20Lambda%20Hands-on%20Lab%28EC2%20Auto%20Start-Stop%29.md)**

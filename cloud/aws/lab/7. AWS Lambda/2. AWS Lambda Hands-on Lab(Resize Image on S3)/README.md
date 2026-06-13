@@ -1,172 +1,137 @@
-# 2. AWS Lambda Hands-on Lab (Resize ảnh tự động trên Amazon S3)
+# 2. AWS Lambda Hands-on Lab (Resize ảnh tự động trên Amazon S3) - Hướng dẫn chi tiết
 
-## I. Tổng quan bài Lab
+👉 **[Xem Đề bài / Yêu cầu bài Lab](2.%20AWS%20Lambda%20Hands-on%20Lab%28Resize%20Image%20on%20S3%29.md)**
 
-Bài Lab này hướng dẫn bạn xây dựng một quy trình tự động xử lý hình ảnh hướng sự kiện:
-1. Khi người dùng tải một bức ảnh định dạng `.jpg` hoặc `.png` lên S3 Bucket nguồn (ví dụ: `my-bucket-images-source`).
-2. S3 phát ra sự kiện `ObjectCreated` và tự động kích hoạt **AWS Lambda Function**.
-3. Lambda Function tải hình ảnh từ Bucket nguồn về thư mục tạm `/tmp`, thực hiện co nhỏ kích thước (Resize) về định dạng Thumbnail (`300x300` pixel) bằng thư viện **Pillow**, sau đó tải lên S3 Bucket đích (ví dụ: `my-bucket-images-resized`).
+## Các bước thực hiện chi tiết
 
----
+### Bước 1: Tạo S3 Bucket
 
-## II. Các bước thực hiện chi tiết
-
-### Bước 1: Tạo S3 Buckets
-1. Truy cập **Amazon S3 Console**.
-2. Tạo hai bucket với các cấu hình mặc định (chặn truy cập công khai):
-   * Bucket Nguồn: `my-bucket-images-source` (ví dụ: `h1eudayne-images-source`).
-   * Bucket Đích: `my-bucket-images-resized` (ví dụ: `h1eudayne-images-resized`).
+Khởi tạo một S3 Bucket trên AWS Console. Bucket này sẽ được cấu hình để gửi sự kiện (Trigger) kích hoạt hàm Lambda khi có tệp tin hình ảnh mới được upload lên.
 
 ---
 
-### Bước 2: Tạo IAM Policy & Role cho Lambda
-Lambda cần quyền đọc dữ liệu từ Bucket Nguồn, lưu dữ liệu vào Bucket Đích và ghi Logs lên CloudWatch.
+### Bước 2: Chuẩn bị Lambda Layer chứa thư viện Pillow
 
-1. Truy cập **IAM Console** $\rightarrow$ **Policies** $\rightarrow$ **Create policy**.
-2. Chọn trình chỉnh sửa **JSON** và nhập nội dung sau:
-   ```json
-   {
-       "Version": "2012-10-17",
-       "Statement": [
-           {
-               "Effect": "Allow",
-               "Action": [
-                   "logs:CreateLogGroup",
-                   "logs:CreateLogStream",
-                   "logs:PutLogEvents"
-               ],
-               "Resource": "arn:aws:logs:*:*:*"
-           },
-           {
-               "Effect": "Allow",
-               "Action": [
-                   "s3:GetObject"
-               ],
-               "Resource": "arn:aws:s3:::*-source/*"
-           },
-           {
-               "Effect": "Allow",
-               "Action": [
-                   "s3:PutObject"
-               ],
-               "Resource": "arn:aws:s3:::*-resized/*"
-           }
-       ]
-   }
-   ```
-3. Đặt tên Policy là `LambdaS3ResizePolicy` và chọn **Create policy**.
-4. Chuyển sang **Roles** $\rightarrow$ **Create role**:
-   * **Trusted entity type**: Chọn *AWS service*.
-   * **Use case**: Chọn *Lambda*.
-   * **Permissions policies**: Tìm và chọn policy `LambdaS3ResizePolicy` vừa tạo.
-5. Đặt tên Role là `LambdaS3ResizeExecutionRole` và hoàn thành tạo Role.
+> [!IMPORTANT]
+> Thư viện **Pillow** cần phải được biên dịch (build) tương thích với hệ điều hành **Amazon Linux 2** (môi trường chạy của Lambda), không phải Windows hay macOS. Nếu cài đặt không đúng môi trường chạy, bạn sẽ gặp lỗi sau:
+> ```text
+> [ERROR] Runtime.ImportModuleError: Unable to import module 'lambda_function': 
+> cannot import name '_imaging' from 'PIL'
+> ```
+
+Để đóng gói Layer tương thích, thực hiện theo các bước sau:
+
+#### 1. Tạo thư mục `python`
+```bash
+mkdir python
+```
+
+#### 2. Cài đặt thư viện Pillow chỉ định platform và runtime tương thích
+
+**Sử dụng Bash / Git Bash / WSL (Lệnh viết trên 1 dòng):**
+```bash
+pip install Pillow --platform manylinux2014_x86_64 --target python --implementation cp --python-version 3.12 --only-binary=:all: --no-deps --upgrade
+```
+
+**Sử dụng PowerShell (Lệnh viết trên nhiều dòng):**
+```powershell
+pip install Pillow `
+    --platform manylinux2014_x86_64 `
+    --target python `
+    --implementation cp `
+    --python-version 3.12 `
+    --only-binary=:all: `
+    --no-deps `
+    --upgrade
+```
+
+#### 3. Nén thư mục thành file zip
+Nén thư mục `python` vừa tạo thành tệp tin `python.zip`.
+
+#### 4. Upload Layer lên AWS Lambda
+1. Truy cập giao diện **AWS Lambda Console** $\rightarrow$ **Layers** $\rightarrow$ **Create layer**.
+2. Thiết lập cấu hình:
+   * **Name**: `python-pillow-layer`.
+   * **Upload**: Chọn tải lên tệp `python.zip`.
+   * **Compatible architectures**: Tích chọn `x86_64`.
+   * **Compatible runtimes**: Chọn `Python 3.12`.
+3. Nhấp chọn **Create**.
 
 ---
 
 ### Bước 3: Tạo Lambda Function
-1. Truy cập **AWS Lambda Console** $\rightarrow$ Chọn **Create function**.
-2. Cấu hình các thông số:
-   * **Function name**: `s3-image-resizer`.
-   * **Runtime**: Chọn **Python 3.12** (phiên bản Pillow Layer hoạt động tốt nhất).
-   * **Change default execution role**: Chọn *Use an existing role*, chọn Role `LambdaS3ResizeExecutionRole`.
-3. Nhấp nút **Create function**.
 
-<p align="center">
-  <img src="../../../../../images/aws/s3_trigger_step1_lambda_create.png" alt="Khởi tạo Lambda Function" width="550"/>
-</p>
+1. Truy cập **AWS Lambda Console** $\rightarrow$ **Create function**.
+2. Thiết lập các thông số:
+   * **Function name**: `resize-image-lambda`.
+   * **Runtime**: Chọn **Python 3.12**.
+   * **Architecture**: Chọn **x86_64**.
+3. Nhấp chọn **Create function**.
 
 ---
 
-### Bước 4: Thêm Lambda Layer cho thư viện Pillow
-Môi trường Python mặc định của AWS Lambda không chứa thư viện xử lý ảnh **Pillow (PIL)**. Ta có thể thêm bằng cách sử dụng **Public Lambda Layer** (ví dụ từ cộng đồng Klayers):
+### Bước 4: Thêm Layer vào Lambda Function
 
-1. Cuộn xuống dưới cùng giao diện Lambda Function của bạn, nhấp nút **Add a layer** trong mục **Layers**.
-2. Chọn **Specify an ARN** và điền ARN Pillow Layer cho Region Singapore (`ap-southeast-1`) chạy Python 3.12:
-   ```text
-   arn:aws:lambda:ap-southeast-1:770693421928:layer:Klayers-p312-Pillow:2
-   ```
-3. Nhấn **Verify** rồi nhấp nút **Add**.
+1. Tại giao diện chi tiết của hàm Lambda vừa tạo, cuộn xuống dưới cùng đến mục **Layers**.
+2. Nhấp nút **Add a layer**.
+3. Chọn **Custom layers**.
+4. Tìm và chọn `python-pillow-layer` với version mới nhất bạn vừa tạo ở Bước 2.
+5. Nhấp chọn **Add**.
 
 ---
 
-### Bước 5: Viết mã nguồn Lambda Function
+### Bước 5: Cấu hình mã nguồn và tài nguyên cho Lambda
 
-1. Thay thế mã mặc định trong tệp `lambda_function.py` bằng đoạn code sau:
-   ```python
-   import boto3
-   import os
-   import uuid
-   from urllib.parse import unquote_plus
-   from PIL import Image
-
-   s3_client = boto3.client('s3')
-
-   def resize_image(image_path, resized_path):
-       with Image.open(image_path) as image:
-           # Co nhỏ ảnh giữ nguyên tỉ lệ, tối đa 300px cho chiều rộng/cao
-           image.thumbnail((300, 300))
-           image.save(resized_path)
-
-   def lambda_handler(event, context):
-       for record in event['Records']:
-           # Lấy thông tin Bucket nguồn và Tên ảnh từ sự kiện
-           source_bucket = record['s3']['bucket']['name']
-           image_key = unquote_plus(record['s3']['object']['key'])
-           
-           # Tạo tên file tạm thời trong thư mục /tmp của Lambda
-           temp_file_name = f"{uuid.uuid4()}-{os.path.basename(image_key)}"
-           download_path = f"/tmp/{temp_file_name}"
-           upload_path = f"/tmp/resized-{temp_file_name}"
-           
-           # 1. Tải ảnh từ S3 Bucket Nguồn về /tmp
-           s3_client.download_file(source_bucket, image_key, download_path)
-           
-           # 2. Thực hiện Resize ảnh sử dụng thư viện Pillow
-           resize_image(download_path, upload_path)
-           
-           # 3. Định nghĩa S3 Bucket đích và Upload ảnh lên
-           target_bucket = source_bucket.replace("-source", "-resized")
-           s3_client.upload_file(upload_path, target_bucket, image_key)
-           
-           print(f"Thành công! Đã resize {image_key} từ {source_bucket} sang {target_bucket}")
-   ```
-2. Nhấn nút **Deploy** để lưu mã nguồn.
+1. Cập nhật mã nguồn trong tệp `lambda_function.py` bằng nội dung từ file [lambda_function.py](lambda_function.py).
+2. Tăng thời gian chạy tối đa (Timeout): Chọn tab **Configuration** $\rightarrow$ **General configuration** $\rightarrow$ **Edit** $\rightarrow$ Thiết lập **Timeout** tối thiểu là **30 giây** (mặc định là 3 giây, có thể bị hết thời gian khi xử lý ảnh lớn).
+3. Tăng dung lượng bộ nhớ (Memory): Thiết lập **Memory** tối thiểu là **512 MB** để cải thiện tốc độ xử lý ảnh của Pillow.
 
 ---
 
-### Bước 6: Cấu hình S3 Event Trigger trên Bucket Nguồn
-1. Mở **S3 Console** $\rightarrow$ Click vào Bucket nguồn `h1eudayne-images-source`.
-2. Chọn tab **Properties**, cuộn xuống phần **Event notifications** $\rightarrow$ Chọn **Create event notification**.
-3. Cấu hình sự kiện:
-   * **Event name**: `image-upload-trigger`.
-   * **Suffix**: `.jpg` hoặc `.png` (chỉ bắt sự kiện khi upload ảnh).
-   * **Event types**: Tích chọn **All object create events**.
-   * **Destination**: Chọn **Lambda function**, chỉ định hàm `s3-image-resizer` vừa tạo.
-4. Nhấp nút **Save changes**.
+### Bước 6: Cấu hình S3 Trigger
 
-<p align="center">
-  <img src="../../../../../images/aws/s3_trigger_step4_s3_notification.png" alt="Cấu hình Trigger trên S3" width="550"/>
-</p>
+1. Tại giao diện Lambda, nhấp chọn **Add trigger** ở phần Function overview.
+2. Chọn dịch vụ **S3**.
+3. **Bucket**: Chọn S3 bucket bạn đã tạo ở Bước 1.
+4. **Event type**: Chọn **All object create events**.
+5. **Prefix**: Điền `images/` (chỉ kích hoạt khi upload vào thư mục này).
+6. **Suffix**: Điền `.jpg` (hoặc để trống để hỗ trợ nhiều định dạng ảnh).
+7. Tích chọn hộp thoại xác nhận cảnh báo gọi đệ quy (Recursive invocation).
+8. Nhấp chọn **Add**.
 
 ---
 
-## III. Xác minh kết quả thực hành (Validation)
+### Bước 7: Chạy thử và Kiểm nghiệm kết quả (Test)
 
-1. Tải một bức ảnh dung lượng lớn (ví dụ: `nature.jpg` khoảng 4 MB) lên S3 Bucket nguồn `h1eudayne-images-source`.
-2. Kiểm tra sơ đồ Lambda Function, bạn sẽ thấy S3 đã xuất hiện làm Trigger đầu vào:
+1. Tải một file ảnh có định dạng `.jpg` lên thư mục `images/` trong S3 Bucket của bạn. *Lưu ý: Tên ảnh không nên chứa ký tự đặc biệt!*
+2. Kiểm tra log thực thi của hàm Lambda trong **CloudWatch Logs**.
+3. Xác nhận các thư mục con sau tự động được tạo và chứa các phiên bản ảnh đã resize tương ứng:
+   * `resized_100/`
+   * `resized_200/`
+   * `resized_500/`
+   * `resized_1000/`
 
-<p align="center">
-  <img src="../../../../../images/aws/s3_trigger_step5_lambda_overview.png" alt="Sơ đồ Lambda Trigger" width="550"/>
-</p>
+---
 
-3. Mở S3 Bucket đích `h1eudayne-images-resized`. Bạn sẽ thấy bức ảnh `nature.jpg` đã xuất hiện ở đây. Kiểm tra kích thước của tệp tin, dung lượng đã được giảm đáng kể xuống chỉ còn vài chục KB.
-4. Truy cập **CloudWatch Logs** tương ứng của hàm Lambda để xem chi tiết log xử lý thành công:
+## Các lỗi thường gặp và Cách khắc phục (Troubleshooting)
 
-<p align="center">
-  <img src="../../../../../images/aws/s3_trigger_step8_cloudwatch_logs.png" alt="Xác nhận CloudWatch Logs" width="550"/>
-</p>
+### 1. Lỗi: "cannot import name '_imaging' from 'PIL'"
+* **Nguyên nhân**: Thư viện Pillow được nén và đóng gói trên môi trường Windows hoặc macOS, dẫn đến thiếu hoặc không tương thích các thư viện liên kết động C (C extensions) trên Amazon Linux.
+* **Cách khắc phục**: Xóa Layer cũ và đóng gói lại tệp zip bằng lệnh pip chứa tham số `--platform manylinux2014_x86_64` như hướng dẫn ở Bước 2.
+
+### 2. Lỗi: "Task timed out"
+* **Nguyên nhân**: Thời gian xử lý ảnh dung lượng lớn vượt quá cấu hình mặc định (3 giây) của Lambda.
+* **Cách khắc phục**: Tăng cấu hình timeout của Lambda lên 30 - 60 giây trong Configuration.
+
+### 3. Lỗi: "Memory limit exceeded"
+* **Nguyên nhân**: Bộ nhớ RAM mặc định (128 MB) không đủ để Pillow load và xử lý ảnh lớn.
+* **Cách khắc phục**: Tăng bộ nhớ RAM cấu hình của Lambda lên ít nhất 512 MB.
 
 ---
 
 * **Bài trước**: [1. Hello Lambda (Làm quen với AWS Lambda Console)](../1.%20Hello%20Lambda.md)
-* **Bài tiếp theo**: [3. AWS Lambda Hands-on Lab(EC2 Auto Start-Stop) (Lab bật tắt EC2 tự động)](../3.%20AWS%20Lambda%20Hands-on%20Lab%28EC2%20Auto%20Start-Stop%29/README.md)
+* **Bài tiếp theo**: [3. AWS Lambda Hands-on Lab(EC2 Auto Start-Stop) (Lab bật tắt EC2 tự động)](../3.%20AWS%20Lambda%20Hands-on%20Lab%28EC2%20Auto%20Start-Stop%29/3.%20AWS%20Lambda%20Hands-on%20Lab%28EC2%20Auto%20Start-Stop%29.md)
+
+---
+
+👉 **[Quay lại Đề bài](2.%20AWS%20Lambda%20Hands-on%20Lab%28Resize%20Image%20on%20S3%29.md)**
