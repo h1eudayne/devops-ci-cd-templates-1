@@ -23,6 +23,7 @@ Thư mục này mô tả các dịch vụ AWS thường được sử dụng tro
 | 13 | [CloudFront](13. CloudFront.md) | Mạng phân phối nội dung (CDN) |
 | 14 | [ACM (Certificate Manager)](14. ACM.md) | Quản lý chứng chỉ bảo mật TLS/SSL (ACM) |
 | 15 | [EFS (Elastic File System)](15. EFS.md) | Hệ thống tệp lưu trữ dùng chung (Shared Storage) |
+| 16 | [AWS Lambda (Serverless Compute)](16.%20AWS%20Lambda.md) | Dịch vụ tính toán Serverless (Serverless Compute) |
 
 ---
 
